@@ -52,9 +52,10 @@ class PurchaseOrderDetailController extends Controller
       $request->validate([
         'items_id' => 'required',
         'qty' => 'required|numeric|min:1',
-        'discount' => 'required|numeric|min:0',
+        'discount' => 'required|numeric|min:0|max:100',
     ]);
     // dd($request);
+
 
     // 1️⃣ Cek apakah sudah ada PO draft untuk user ini
     $purchaseOrder = PurchaseOrder::where('user_id', Auth::id())
@@ -80,13 +81,21 @@ class PurchaseOrderDetailController extends Controller
 
     }
 
+
+    $item = Items::findOrFail($request->items_id);
+    $price = $item->price_item;
+    $qty = $request->qty;
+    $hasilQuantityKaliprice = $price * $qty;
+    $discount = $request->discount;
+    $total = ($hasilQuantityKaliprice) - ($hasilQuantityKaliprice * ($discount / 100));
+    // 1 10 135
     // 3️⃣ Buat detail item
     PurchaseOrderDetail::create([
         'purchase_order_id' => $purchaseOrder->id,
-        'items_id' => $request->items_id,
-        'qty' => $request->qty,
-        'discount' => $request->discount,
-        'total' => $request->qty * $request->discount,
+        'items_id' => $item->id,
+        'qty' => $qty,
+        'discount' => $discount,
+        'total' => $total
     ]);
 
     return redirect()->back()->with('success', 'Item berhasil ditambahkan ke Purchase Order (Draft)');

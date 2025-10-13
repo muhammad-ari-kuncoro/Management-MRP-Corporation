@@ -78,9 +78,9 @@
                                 <td>{{ $data->name_item }}</td>
                                 <td>{{ $data->spesification }}</td>
                                 <td>{{ $data->type }}</td>
+                                <td>{{ $data->price_item }}</td>
                                 <td>{{ $data->qty }}</td>
                                 <td>{{ $data->weight_item }}</td>
-                                <td>{{ $data->price_item }}</td>
                                 <td>{{ $data->hpp }}</td>
                                 <td>{{ $data->category }}</td>
                                 <td>
