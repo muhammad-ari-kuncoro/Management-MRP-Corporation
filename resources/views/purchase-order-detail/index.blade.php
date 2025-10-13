@@ -12,12 +12,11 @@
         <form id="purchaseOrderForm" method="post" action="{{route('purchase-order.update', $purchaseOrder->id ?? '')}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label>No PO</label>
-                        <input type="text" class="form-control" name="po_no" value="{{ $purchaseOrder->po_no ?? 'TGR-PO/MSM/2509/0010' }}" readonly>
+                        <input type="text" class="form-control" name="po_no" value="{{ $purchaseOrder->po_no ?? '' }}" readonly disabled>
                     </div>
 
                     <div class="mb-3">
@@ -92,14 +91,18 @@
 
             <hr>
 
-            {{-- Form Tambah Item --}}
-            <h6 class="mb-3">Tambah Item</h6>
+
         </form>
 
         {{-- Form untuk tambah detail item (TERPISAH dari form header) --}}
         <form action="{{route('purchase-order-detail.create')}}" method="post" id="purchaseOrderDetailForm">
             @csrf
-            <input type="hidden" name="purchase_order_id" value="{{ $purchaseOrder->id ?? '' }}">
+           @if($po_draft)
+        <input type="hidden" name="purchase_order_id" value="{{ $po_draft->id }}">
+    @else
+        <!-- Handle jika tidak ada PO draft yang ditemukan -->
+        <p class="text-danger text-center">Anda harus membuat Purchase Order draft terlebih dahulu.</p>
+    @endif
 
             <div class="row align-items-end">
                 {{-- Kode Item --}}
@@ -114,10 +117,10 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="items_id" class="form-label">Nama Item</label>
-                        <select name="items_id" id="items_id" class="form-select" required>
+                        <select name="items_id" id="items_id" class="form-select" name="items_id" required>
                             <option value="" disabled selected>-- Pilih Nama Item --</option>
                             @foreach($items ?? [] as $item)
-                                <option value="{{ $item->items_id }}"
+                                <option value="{{ $item->id }}"
                                         data-kode="{{ $item->kd_item }}"
                                         data-price="{{ $item->price_item }}">
                                     {{ $item->name_item }}
@@ -156,67 +159,68 @@
 
         <hr>
 
-        {{-- Tabel Barang --}}
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Kode Barang</th>
-                        <th>Nama Barang</th>
-                        <th>Spesifikasi</th>
-                        <th>Qty</th>
-                        <th>Satuan</th>
-                        <th>Harga</th>
-                        <th>Diskon</th>
-                        <th>Total</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="itemTableBody">
-                    @forelse ($detail_po ?? [] as $data)
-                    <tr data-id="{{ $data->id }}">
-                        <td>{{ $data->items->kd_item }}</td>
-                        <td>{{ $data->items->name_item }}</td>
-                        <td>{{ $data->items->spesification ?? '-' }}</td>
-                        <td>
-                            <input type="number"
-                                   class="form-control form-control-sm qty-input"
-                                   value="{{ $data->qty }}"
-                                   min="1"
-                                   data-id="{{ $data->id }}"
-                                   data-price="{{ $data->items->price_item }}">
-                        </td>
-                        <td>{{ $data->items->type }}</td>
-                        <td>Rp {{ number_format($data->items->price_item, 0, ',', '.') }}</td>
-                        <td>
-                            <input type="number"
-                                   class="form-control form-control-sm discount-input"
-                                   value="{{ $data->discount ?? 0 }}"
-                                   min="0"
-                                   data-id="{{ $data->id }}"
-                                   data-price="{{ $data->items->price_item }}">
-                        </td>
-                        <td class="total-cell">
-                            Rp {{ number_format($data->total ?? ($data->items->price_item * $data->qty), 0, ',', '.') }}
-                        </td>
-                        <td>
-                            <form action="{{ route('purchase-order-detail.destroy', $data->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus item ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="9" class="text-center">Belum ada item ditambahkan</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+    {{-- Tabel Barang --}}
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th>Spesifikasi</th>
+                <th>Qty</th>
+                <th>Satuan</th>
+                <th>Harga</th>
+                <th>Diskon</th>
+                <th>Total</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="itemTableBody">
+            @forelse ($detail_po as $data)
+                <tr data-id="{{ $data->id }}">
+                    <td>{{ $data->items->kd_item ?? '-' }}</td>
+                    <td>{{ $data->items->name_item ?? '-' }}</td>
+                    <td>{{ $data->items->spesification ?? '-' }}</td>
+                    <td>
+                        <input type="number"
+                               class="form-control form-control-sm qty-input"
+                               value="{{ $data->qty }}"
+                               min="1"
+                               data-id="{{ $data->id }}"
+                               data-price="{{ $data->items->price_item ?? 0 }}">
+                    </td>
+                    <td>{{ $data->items->type ?? '-' }}</td>
+                    <td>Rp {{ number_format($data->items->price_item ?? 0, 0, ',', '.') }}</td>
+                    <td>
+                        <input type="number"
+                               class="form-control form-control-sm discount-input"
+                               value="{{ $data->discount ?? 0 }}"
+                               min="0"
+                               data-id="{{ $data->id }}"
+                               data-price="{{ $data->items->price_item ?? 0 }}">
+                    </td>
+                    <td class="total-cell">
+                        Rp {{ number_format($data->total ?? (($data->items->price_item ?? 0) * $data->qty), 0, ',', '.') }}
+                    </td>
+                    <td>
+                        <form action="{{ route('purchase-order-detail.destroy', $data->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus item ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="9" class="text-center">Belum ada item ditambahkan</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
 
         {{-- Bagian Total --}}
         <div class="row justify-content-end">
