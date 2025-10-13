@@ -19,17 +19,17 @@ return new class extends Migration
             $table->foreign("user_id")->references("id")->on("users");
             $table->bigInteger('supplier_id')->unsigned()->nullable();
             $table->foreign("supplier_id")->references("id")->on("tb_suppliers");
-            $table->string('estimation_delivery_date');
-            $table->string('note');
-            $table->string('term_of_payment');
+            $table->string('estimation_delivery_date')->nullable();
+            $table->string('note')->nullable()->nullable();
+            $table->string('term_of_payment')->nullable();
             $table->enum('status', ['pph_new','draft', 'pending', 'waiting_gr','partial_items','done','rejected'])->default('draft');
-            $table->string('currency');
-            $table->string('currency_rate');
+            $table->string('currency')->nullable();
+            $table->string('currency_rate')->nullable();
             $table->string('attachment')->nullable();
             $table->string('approved_by')->nullable();
             $table->datetime('approved_at')->nullable();
-            $table->string('transportation_fee');
-            $table->string('journal_id');
+            $table->string('transportation_fee')->nullable();
+            $table->string('journal_id')->nullable();
             $table->timestamps();
         });
     }

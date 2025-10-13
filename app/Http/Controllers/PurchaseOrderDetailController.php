@@ -65,15 +65,15 @@ class PurchaseOrderDetailController extends Controller
     // 2️⃣ Kalau belum ada, buat otomatis
     if (!$purchaseOrder) {
         $purchaseOrder = PurchaseOrder::create([
-            'po_no' => 'PO-' . now()->format('YmdHis'),
+            'po_no' => 'PO-' . now()->format('Ymd'),
             'po_date' => now(),
-            'estimation_delivery_date' => now(),
-            'note' => 'test hellow world',
-            'term_of_payment' => 'test hellow world',
+            'estimation_delivery_date' => 'NULLABLE',
+            'note' => 'NULLABLE',
+            'term_of_payment' => 'NULLABLE',
             'currency' => 1,
-            'currency_rate' => 2,
-            'transportation_fee' => 'test hwleord',
-            'journal_id' => 'hellow world',
+            'currency_rate' => 1,
+            'transportation_fee' => 'NULLABLE',
+            'journal_id' => 'NULLABLE',
             'user_id' => Auth::id(),
             'status' => 'draft',
         ]);

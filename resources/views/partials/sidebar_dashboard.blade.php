@@ -41,8 +41,8 @@
                             <li class="submenu-item {{ Request::routeIs('items.index') ? 'active' : '' }}">
                                 <a href="{{ route('items.index') }}" class="submenu-link">Master Data Barang</a>
                             </li>
-                            <li class="submenu-item">
-                                <a href="component-alert.html" class="submenu-link">Alert</a>
+                            <li class="submenu-item {{ Request::routeIs('branch-company.index') ? 'active' : '' }}">
+                                <a href="{{ route('branch-company.index') }}" class="submenu-link">Master Data Branch Company</a>
                             </li>
                         </ul>
                     </li>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BranchCompany;
 use Illuminate\Http\Request;
+use Spatie\FlareClient\View;
 
 class BranchCompanyController extends Controller
 {
@@ -13,6 +14,9 @@ class BranchCompanyController extends Controller
     public function index()
     {
         //
+        $data['judul'] = 'Branch Company Page';
+        $data['data-branch'] = BranchCompany::all();
+        return view('branch-company.index',$data);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BranchCompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LoginController;
@@ -57,6 +58,11 @@ Route::prefix('purchase-order-detail')->middleware(['auth'])->group(function () 
     // AJAX Routes
     Route::post('/update-qty', [PurchaseOrderDetailController::class, 'updateQty'])->name('purchase-order-detail.updateQty');
     Route::post('/update-discount', [PurchaseOrderDetailController::class, 'updateDiscount'])->name('purchase-order-detail.updateDiscount');
+});
+
+
+Route::prefix('branch-company')->name('branch-company.')->group(function(){
+    Route::get('/',[BranchCompanyController::class, 'index'])->name('index');
 });
 
 

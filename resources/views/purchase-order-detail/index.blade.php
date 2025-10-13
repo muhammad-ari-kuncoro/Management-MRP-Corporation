@@ -9,14 +9,16 @@
 
     <div class="card-body">
         {{-- Form Purchase Order Header --}}
-        <form id="purchaseOrderForm" method="post" action="{{route('purchase-order.update', $purchaseOrder->id ?? '')}}" enctype="multipart/form-data">
+        <form id="purchaseOrderForm" method="post" action="{{ route('purchase-order.store') }}" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
+            @method('POST')
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label>No PO</label>
-                        <input type="text" class="form-control" name="po_no" value="{{ $purchaseOrder->po_no ?? '' }}" readonly disabled>
+                        <input type="text" class="form-control" name="po_no"
+                        value="{{ $purchaseOrder->po_no ?? 'PO-' . now()->format('ymd') }}" readonly disabled>
+
                     </div>
 
                     <div class="mb-3">
