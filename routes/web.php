@@ -63,6 +63,9 @@ Route::prefix('purchase-order-detail')->middleware(['auth'])->group(function () 
 
 Route::prefix('branch-company')->name('branch-company.')->group(function(){
     Route::get('/',[BranchCompanyController::class, 'index'])->name('index');
+    Route::post('/create',[BranchCompanyController::class, 'store'])->name('store');
+    Route::get('/branch-company/edit/{id}',[BranchCompanyController::class, 'edit'])->name('edit');
+    Route::put('/update-branch/{id}',[BranchCompanyController::class, 'update'])->name('update');
 });
 
 
