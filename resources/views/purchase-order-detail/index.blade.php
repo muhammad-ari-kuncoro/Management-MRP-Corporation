@@ -202,7 +202,7 @@
                         </td>
 
                         <td class="total-cell">
-                            Rp {{ number_format($data->total, 0, ',', '.') }}
+                            Rp {{ number_format($data->total ?? 0, 2, ',', '.') }}
                         </td>
 
                         <td>
@@ -298,96 +298,55 @@
         </form>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Handle select item untuk mengisi kode item
         const select = document.getElementById('items_id');
         const kdInput = document.getElementById('kd_item');
 
+        // Isi otomatis kode item berdasarkan pilihan
         if (select && kdInput) {
             select.addEventListener('change', function () {
                 const selectedOption = this.options[this.selectedIndex];
-                const kodeItem = selectedOption ? selectedOption.getAttribute('data-kode') : '';
-                kdInput.value = kodeItem || '';
+                kdInput.value = selectedOption ? selectedOption.getAttribute('data-kode') : '';
             });
         }
 
-        // Handle perubahan qty secara real-time
-        document.querySelectorAll('.qty-input').forEach(input => {
-            input.addEventListener('input', function () {
-                updateRowTotal(this);
-            });
-        });
-
-        // Handle perubahan discount secara real-time
-        document.querySelectorAll('.discount-input').forEach(input => {
-            input.addEventListener('input', function () {
-                updateRowTotal(this);
-            });
-        });
-
-        // Handle perubahan biaya pengiriman
+        // Perubahan biaya pengiriman
         const shippingInput = document.getElementById('shipping-input');
         if (shippingInput) {
-            shippingInput.addEventListener('input', function () {
-                updateGrandTotal();
-            });
+            shippingInput.addEventListener('input', updateGrandTotal);
         }
 
-        // Fungsi untuk update total per row
-        function updateRowTotal(element) {
-            const row = element.closest('tr');
-            const price = parseFloat(element.dataset.price);
-            const qtyInput = row.querySelector('.qty-input');
-            const discountInput = row.querySelector('.discount-input');
-            const totalCell = row.querySelector('.total-cell');
-
-            const qty = parseInt(qtyInput.value) || 0;
-            const discount = parseFloat(discountInput.value) || 0;
-
-            // Hitung total
-            const subtotal = price * qty;
-            const total = subtotal - discount;
-
-            // Update tampilan total
-            if (totalCell) {
-                totalCell.textContent = "Rp " + total.toLocaleString('id-ID');
-            }
-
-            // Update grand total
-            updateGrandTotal();
-        }
-
-        // Fungsi untuk menghitung grand total
+        // Fungsi utama: hitung total keseluruhan
         function updateGrandTotal() {
             let subtotal = 0;
-            let totalDiscount = 0;
+            let totalDiskon = 0;
 
-            // Loop semua row untuk hitung subtotal
+            // Loop setiap baris item
             document.querySelectorAll('#itemTableBody tr[data-id]').forEach(row => {
-                const qtyInput = row.querySelector('.qty-input');
-                const discountInput = row.querySelector('.discount-input');
+                const priceText = row.querySelector('td:nth-child(6)')?.textContent.replace(/[^\d,-]/g, '') || '0';
+                const discountText = row.querySelector('td:nth-child(7)')?.textContent.replace('%', '') || '0';
+                const qtyText = row.querySelector('td:nth-child(4)')?.textContent || '0';
 
-                if (qtyInput) {
-                    const price = parseFloat(qtyInput.dataset.price);
-                    const qty = parseInt(qtyInput.value) || 0;
-                    const discount = parseFloat(discountInput.value) || 0;
+                const price = parseFloat(priceText.replace(',', '.')) || 0;
+                const discount = parseFloat(discountText) || 0;
+                const qty = parseFloat(qtyText) || 0;
 
-                    subtotal += (price * qty);
-                    totalDiscount += discount;
-                }
+                const totalItem = price * qty;
+                const potongan = totalItem * (discount / 100);
+
+                subtotal += totalItem;
+                totalDiskon += potongan;
             });
 
-            // Hitung PPN 11%
-            const ppn = subtotal * 0.11;
+            // Hitung PPN 11% setelah diskon
+            const ppn = (subtotal - totalDiskon) * 0.11;
 
-            // Ambil biaya pengiriman
-            const shippingInput = document.getElementById('shipping-input');
-            const shipping = shippingInput ? parseFloat(shippingInput.value) || 0 : 0;
+            // Biaya pengiriman
+            const shipping = parseFloat(shippingInput?.value || 0);
 
             // Hitung grand total
-            const grandTotal = subtotal - totalDiscount + ppn + shipping;
+            const grandTotal = subtotal - totalDiskon + ppn + shipping;
 
             // Update tampilan
             const subtotalElement = document.querySelector('.subtotal-value');
@@ -395,17 +354,21 @@
             const ppnInput = document.getElementById('ppn-input');
             const grandTotalElement = document.querySelector('.grand-total-value');
 
-            if (subtotalElement) subtotalElement.textContent = "Rp " + subtotal.toLocaleString('id-ID');
-            if (discountElement) discountElement.textContent = totalDiscount.toString().replace(/\.0+$/, '') + "%";
-            if (ppnInput) ppnInput.value = Math.round(ppn);
-            if (grandTotalElement) grandTotalElement.textContent = "Rp " + grandTotal.toLocaleString('id-ID');
+            if (subtotalElement)
+                subtotalElement.textContent = "Rp " + subtotal.toLocaleString('id-ID', {minimumFractionDigits: 2});
+            if (discountElement)
+                discountElement.textContent = "Rp " + totalDiskon.toLocaleString('id-ID', {minimumFractionDigits: 2});
+            if (ppnInput)
+                ppnInput.value = Math.round(ppn);
+            if (grandTotalElement)
+                grandTotalElement.textContent = "Rp " + grandTotal.toLocaleString('id-ID', {minimumFractionDigits: 2});
         }
 
-        // Initial calculation
+        // Jalankan pertama kali
         updateGrandTotal();
     });
 
-    // Function untuk submit PO
+    // Fungsi Ajukan PO
     function submitPO() {
         if (confirm('Apakah Anda yakin ingin mengajukan Purchase Order ini?')) {
             const form = document.createElement('form');
@@ -422,7 +385,6 @@
             form.submit();
         }
     }
-
 </script>
 
 @endsection
