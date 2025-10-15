@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BranchCompany;
 use App\Models\Items;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ItemsController extends Controller
 {
@@ -16,6 +17,7 @@ class ItemsController extends Controller
         //
         $data['judul'] = 'Master Data Barang';
         $data['item_all'] = Items::all();
+
         return view('items.index',$data);
     }
 
@@ -81,18 +83,63 @@ class ItemsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Items $items)
+    public function edit($id)
     {
         //
+        $data['judul'] = 'Judul Edit Halaman';
+        $data['itemsDataById'] = Items::findOrFail($id);
+        $data['dataBranch'] =  BranchCompany::all(); // ambil semua cabang
+
+    return view('items.edit', $data);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Items $items)
+    public function update(Request $request, $id)
     {
-        //
+    // Cari data berdasarkan ID
+    $item = Items::find($id);
+    if (!$item) {
+        return response()->json(['message' => 'Data item tidak ditemukan!'], 404);
     }
+
+    // Validasi input
+    $validator = Validator::make($request->all(), [
+        'kd_item'                  => 'required|string|max:50',
+        'name_item'                => 'required|string|max:255',
+        'spesification'            => 'nullable|string|max:255',
+        'type'                     => 'nullable|string|max:100',
+        'price_item'               => 'required|numeric|min:0',
+        'qty'                      => 'required|integer|min:1',
+        'weight_item'              => 'nullable|numeric|min:0',
+        'hpp'                      => 'nullable|numeric|min:0',
+        'category'                 => 'required|string|max:100',
+        'status_item'              => 'required|in:Active,Non Active',
+        'branch_company_id'        => 'required|exists:tb_branch_company_items,id',
+        'minim_stok'               => 'nullable|integer|min:0',
+        'konversion_items_carbon'  => 'nullable|numeric|min:0',
+        'description'              => 'nullable|string|max:500',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validasi gagal!',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    // Update data
+    $item->update($validator->validated());
+
+    return response()->json([
+        'message' => 'Data item berhasil diperbarui!',
+        'data' => $item
+    ]);
+
+     return view('items.index',$data);
+}
 
     /**
      * Remove the specified resource from storage.

@@ -35,6 +35,8 @@ Route::prefix('items')->name('items.')->group(function(){
     Route::get('/',[ItemsController::class, 'index'])->name('index');
     Route::get('/create',[ItemsController::class, 'create'])->name('create');
     Route::post('/create',[ItemsController::class, 'store'])->name('store');
+    Route::get('/items/edit/{id}',[ItemsController::class, 'edit'])->name('edit');
+    Route::put('/update-items/edit/{id}',[ItemsController::class, 'update'])->name('update');
 });
 
 // Purchase Order Routes

@@ -95,7 +95,7 @@
                                 <td>
                                     <div class="d-flex gap-2">
                                         <!-- Tombol Edit -->
-                                        <a href="" class="btn btn-sm btn-warning">
+                                        <a href="{{route('items.edit',$data->id)}}" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                     </div>
