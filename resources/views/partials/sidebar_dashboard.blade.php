@@ -9,7 +9,8 @@
                     <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
                         <!-- mode toggle -->
                         <div class="form-check form-switch fs-6">
-                            <input class="form-check-input me-0" type="checkbox" id="toggle-dark" style="cursor: pointer">
+                            <input class="form-check-input me-0" type="checkbox" id="toggle-dark"
+                                style="cursor: pointer">
                             <label class="form-check-label"></label>
                         </div>
                     </div>
@@ -38,17 +39,21 @@
                             <span>Master</span>
                         </a>
                         <ul class="submenu">
-                            <li class="submenu-item {{ Request::routeIs('items.index') ? 'active' : '' }}">
-                                <a href="{{ route('items.index') }}" class="submenu-link">Master Data Barang</a>
-                            </li>
 
                             <li class="submenu-item {{ Request::routeIs('branch-company.index') ? 'active' : '' }}">
-                                <a href="{{ route('branch-company.index') }}" class="submenu-link">Master Data Branch Company</a>
+                                <a href="{{ route('branch-company.index') }}" class="submenu-link">Master Data Branch
+                                    Company</a>
                             </li>
 
 
                             <li class="submenu-item {{ Request::routeIs('supplier-company.index') ? 'active' : '' }}">
-                                <a href="{{ route('supplier-company.index') }}" class="submenu-link">Master Data Supplier Company</a>
+                                <a href="{{ route('supplier-company.index') }}" class="submenu-link">Master Data
+                                    Supplier Company</a>
+                            </li>
+
+
+                            <li class="submenu-item {{ Request::routeIs('items.index') ? 'active' : '' }}">
+                                <a href="{{ route('items.index') }}" class="submenu-link">Master Data Barang</a>
                             </li>
 
                         </ul>

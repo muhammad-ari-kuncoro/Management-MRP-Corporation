@@ -75,8 +75,7 @@ Route::prefix('branch-company')->name('branch-company.')->group(function(){
 Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
     Route::get('/',[SupplierController::class, 'index'])->name('index');
     Route::get('/create',[SupplierController::class, 'create'])->name('create');
-
-
+    Route::post('/store',[SupplierController::class, 'store'])->name('store');
 });
 
 

@@ -20,12 +20,12 @@ return new class extends Migration
             $table->string('email');
             $table->string('address');
             $table->string('address_shipping');
-            $table->string('website');
+            $table->string('website'); //
             $table->string('name_pic');
             $table->string('phone_number_pic');
             $table->string('position_pic')->nullable();
             $table->integer('id_region');
-            $table->integer('top');
+            $table->string('top');
             $table->integer('limit_kredit');
             $table->string('sales');
             $table->string('method_payment');
