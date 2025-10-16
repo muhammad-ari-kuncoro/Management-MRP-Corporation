@@ -16,4 +16,6 @@
   <link rel="stylesheet" href="{{asset('./assets/compiled/css/app.css')}}">
   <link rel="stylesheet" href="{{asset('./assets/compiled/css/app-dark.css')}}">
   <link rel="stylesheet" href="{{asset('./assets/compiled/css/iconly.css')}}">
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
 </head>

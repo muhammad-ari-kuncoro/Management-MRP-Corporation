@@ -27,6 +27,7 @@ class ItemsController extends Controller
     public function create()
     {
         //
+        $data['judul']  = 'Form Master Tambah Data Barang';
         $data['branch_company'] = BranchCompany::all();
         return view('items.create',$data);
     }

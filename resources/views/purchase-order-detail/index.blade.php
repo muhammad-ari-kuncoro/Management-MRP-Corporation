@@ -151,8 +151,8 @@
                 <div class="col-md-2">
                     <div class="mb-3">
                         <label for="discount" class="form-label">Discount</label>
-                        <input type="number" name="discount" id="discount" class="form-control" placeholder="0" min="0" max="100"
-                            value="0">
+                        <input type="number" name="discount" id="discount" class="form-control" placeholder="0" min="0"
+                            max="100" value="0">
                     </div>
                 </div>
 
@@ -254,7 +254,7 @@
                         <td>Biaya Pengiriman</td>
                         <td class="text-end">
                             <input type="number" id="shipping-input" class="form-control form-control-sm text-end"
-                                value="{{ $purchaseOrder->transportation_fee ?? 0 }}" min="0">
+                                value="{{ $purchaseOrder->transportation_fee ?? 0 }}" min="1">
                         </td>
                     </tr>
                     <tr class="table-light fw-bold">
@@ -272,13 +272,19 @@
             @csrf
             @method('PUT')
 
-            {{-- Upload File --}}
             <div class="mb-3">
                 <label>Attachment</label>
-                <input type="file" class="form-control" name="attachment">
-                @if(isset($purchaseOrder) && $purchaseOrder->attachment)
-                <small class="text-muted">File saat ini: {{ basename($purchaseOrder->attachment) }}</small>
-                @endif
+                <input type="file" class="form-control" name="attachment" id="attachmentInput" accept="image/*">
+
+                {{-- Preview Container --}}
+                <div class="mt-2">
+                    @if(isset($purchaseOrder) && $purchaseOrder->attachment)
+                    <img src="{{ asset('storage/'.$purchaseOrder->attachment) }}" id="attachmentPreview"
+                        alt="Preview Attachment" class="img-thumbnail" style="max-height: 150px;">
+                    @else
+                    <img id="attachmentPreview" class="img-thumbnail d-none" style="max-height: 150px;">
+                    @endif
+                </div>
             </div>
 
             {{-- Tombol --}}
@@ -299,19 +305,25 @@
     </div>
 </div>
 <script>
+    // MENGGUNAKAN JAVASCRIPT DOM
     document.addEventListener('DOMContentLoaded', function () {
+
+
+        // Isi otomatis kode item berdasarkan pilihan
         const select = document.getElementById('items_id');
         const kdInput = document.getElementById('kd_item');
 
-        // Isi otomatis kode item berdasarkan pilihan
         if (select && kdInput) {
             select.addEventListener('change', function () {
                 const selectedOption = this.options[this.selectedIndex];
                 kdInput.value = selectedOption ? selectedOption.getAttribute('data-kode') : '';
             });
         }
+        // End Otomatis Kode Item Berdasarkan Pilihan
 
-        // Perubahan biaya pengiriman
+
+
+        // Interface Pada Perubahan biaya pengiriman
         const shippingInput = document.getElementById('shipping-input');
         if (shippingInput) {
             shippingInput.addEventListener('input', updateGrandTotal);
@@ -324,9 +336,11 @@
 
             // Loop setiap baris item
             document.querySelectorAll('#itemTableBody tr[data-id]').forEach(row => {
-                const priceText = row.querySelector('td:nth-child(6)')?.textContent.replace(/[^\d,-]/g, '') || '0';
-                const discountText = row.querySelector('td:nth-child(7)')?.textContent.replace('%', '') || '0';
-                const qtyText = row.querySelector('td:nth-child(4)')?.textContent || '0';
+                const priceText = row.querySelector('td:nth-child(6)') ? .textContent.replace(
+                    /[^\d,-]/g, '') || '0';
+                const discountText = row.querySelector('td:nth-child(7)') ? .textContent.replace('%',
+                    '') || '0';
+                const qtyText = row.querySelector('td:nth-child(4)') ? .textContent || '0';
 
                 const price = parseFloat(priceText.replace(',', '.')) || 0;
                 const discount = parseFloat(discountText) || 0;
@@ -343,7 +357,7 @@
             const ppn = (subtotal - totalDiskon) * 0.11;
 
             // Biaya pengiriman
-            const shipping = parseFloat(shippingInput?.value || 0);
+            const shipping = parseFloat(shippingInput ? .value || 0);
 
             // Hitung grand total
             const grandTotal = subtotal - totalDiskon + ppn + shipping;
@@ -355,13 +369,19 @@
             const grandTotalElement = document.querySelector('.grand-total-value');
 
             if (subtotalElement)
-                subtotalElement.textContent = "Rp " + subtotal.toLocaleString('id-ID', {minimumFractionDigits: 2});
+                subtotalElement.textContent = "Rp " + subtotal.toLocaleString('id-ID', {
+                    minimumFractionDigits: 2
+                });
             if (discountElement)
-                discountElement.textContent = "Rp " + totalDiskon.toLocaleString('id-ID', {minimumFractionDigits: 2});
+                discountElement.textContent = "Rp " + totalDiskon.toLocaleString('id-ID', {
+                    minimumFractionDigits: 2
+                });
             if (ppnInput)
                 ppnInput.value = Math.round(ppn);
             if (grandTotalElement)
-                grandTotalElement.textContent = "Rp " + grandTotal.toLocaleString('id-ID', {minimumFractionDigits: 2});
+                grandTotalElement.textContent = "Rp " + grandTotal.toLocaleString('id-ID', {
+                    minimumFractionDigits: 2
+                });
         }
 
         // Jalankan pertama kali
@@ -385,6 +405,23 @@
             form.submit();
         }
     }
+
+    // Untuk Menampikan Preview Upload gambar(Attachment)
+    document.getElementById('attachment').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('attachmentPreview');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none'); // d-none kepanjangan dari Display None , Singkatan unfuk framework CSS bisa Bootstrap Atau Tailwind (Sesuai Kebutuhan)
+            }
+            reader.readAsDataURL(file);
+        }
+    })
+
 </script>
 
 @endsection

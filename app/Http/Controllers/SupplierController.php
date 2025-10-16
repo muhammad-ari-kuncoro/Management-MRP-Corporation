@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BranchCompany;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,8 @@ class SupplierController extends Controller
     public function index()
     {
         //
+        $data['judul'] = 'Master Data Supplier';
+        return view('supplier.index',$data);
     }
 
     /**
@@ -21,6 +24,9 @@ class SupplierController extends Controller
     public function create()
     {
         //
+        $data['judul'] = 'Form Master Tambah Data Barang';
+        $data['branchCompany'] =  BranchCompany::all();
+        return view('supplier.create',$data);
     }
 
     /**

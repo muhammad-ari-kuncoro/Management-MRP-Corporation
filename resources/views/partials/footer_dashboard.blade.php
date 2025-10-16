@@ -1,7 +1,7 @@
 <footer>
     <div class="footer clearfix mb-0 text-muted">
         <div class="float-start">
-            <p>2023 &copy; Mazer</p>
+            <p>2025 &copy;</p>
         </div>
         <div class="float-end">
             <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
@@ -22,6 +22,9 @@
 <!-- Need: Apexcharts -->
 <script src="{{ asset('assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('assets/static/js/pages/dashboard.js') }}"></script>
+
+
+<script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
 
 </body>
 

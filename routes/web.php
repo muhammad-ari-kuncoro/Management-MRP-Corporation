@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseOrderDetailController;
+use App\Http\Controllers\SupplierController;
 use App\Models\PurchaseOrder;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,14 @@ Route::prefix('branch-company')->name('branch-company.')->group(function(){
     Route::post('/create',[BranchCompanyController::class, 'store'])->name('store');
     Route::get('/branch-company/edit/{id}',[BranchCompanyController::class, 'edit'])->name('edit');
     Route::put('/update-branch/{id}',[BranchCompanyController::class, 'update'])->name('update');
+});
+
+
+Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
+    Route::get('/',[SupplierController::class, 'index'])->name('index');
+    Route::get('/create',[SupplierController::class, 'create'])->name('create');
+
+
 });
 
 

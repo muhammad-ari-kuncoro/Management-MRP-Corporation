@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('website');
             $table->string('name_pic');
             $table->string('phone_number_pic');
-            $table->string('position_pic');
+            $table->string('position_pic')->nullable();
             $table->integer('id_region');
             $table->integer('top');
             $table->integer('limit_kredit');
@@ -39,8 +39,8 @@ return new class extends Migration
             $table->string('no_rek');
             $table->string('npwp');
             $table->string('siup');
-            $table->string('scan_npwp');
-            $table->string('scan_siup');
+            $table->string('scan_npwp')->nullable();
+            $table->string('scan_siup')->nullable();
             $table->timestamps();
         });
     }

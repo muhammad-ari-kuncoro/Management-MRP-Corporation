@@ -41,9 +41,16 @@
                             <li class="submenu-item {{ Request::routeIs('items.index') ? 'active' : '' }}">
                                 <a href="{{ route('items.index') }}" class="submenu-link">Master Data Barang</a>
                             </li>
+
                             <li class="submenu-item {{ Request::routeIs('branch-company.index') ? 'active' : '' }}">
                                 <a href="{{ route('branch-company.index') }}" class="submenu-link">Master Data Branch Company</a>
                             </li>
+
+
+                            <li class="submenu-item {{ Request::routeIs('supplier-company.index') ? 'active' : '' }}">
+                                <a href="{{ route('supplier-company.index') }}" class="submenu-link">Master Data Supplier Company</a>
+                            </li>
+
                         </ul>
                     </li>
 
