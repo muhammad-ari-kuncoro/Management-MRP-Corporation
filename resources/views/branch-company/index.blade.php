@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover" id="table1">
+                    <table class="table table-hover" id="myTable7">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -97,10 +97,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="d-flex justify-content-end -mt-3">
-                        <!-- Pagination links -->
-                        {{ $data_branch->links() }}
-                    </div>
 
                 </div>
             </div>
@@ -212,3 +208,15 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+@endpush
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#myTable7').DataTable();
+});
+</script>
+@endpush

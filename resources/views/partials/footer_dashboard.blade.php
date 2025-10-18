@@ -23,8 +23,12 @@
 <script src="{{ asset('assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('assets/static/js/pages/dashboard.js') }}"></script>
 
+{{-- JS Global --}}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
-<script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+{{-- ✅ TEMPAT SCRIPT TAMBAHAN DARI @push --}}
+@stack('scripts')
 
 </body>
 

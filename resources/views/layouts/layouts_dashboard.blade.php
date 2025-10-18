@@ -1,4 +1,5 @@
 @include('partials.header_dashboard')
+@stack('styles')
 <body>
     <script src="assets/static/js/initTheme.js"></script>
     <div id="app">
