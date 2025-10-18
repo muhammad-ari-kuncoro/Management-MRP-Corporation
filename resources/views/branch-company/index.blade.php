@@ -97,6 +97,10 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end -mt-3">
+                        <!-- Pagination links -->
+                        {{ $data_branch->links() }}
+                    </div>
 
                 </div>
             </div>
