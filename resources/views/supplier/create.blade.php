@@ -16,6 +16,7 @@
                         <div class="row">
                             {{-- Kolom Kiri --}}
                             <div class="col-md-6">
+
                                 <div class="mb-3">
                                     <label for="name_suppliers" class="form-label">Nama Supplier</label>
                                     <input type="text"
@@ -23,22 +24,6 @@
                                         id="name_suppliers" name="name_suppliers" value="{{ old('name_suppliers') }}"
                                         placeholder="Harap di isi Nama Supplier" required>
                                     @error('name_suppliers')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <label for="phone_number" class="form-label">No Telpon Supplier</label>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">+62</span>
-                                    <input type="number"
-                                        class="form-control @error('phone_number') is-invalid @enderror"
-                                        id="phone_number" name="phone_number"
-                                        placeholder="Harap Di isi No Telpon CTH : 8123455" required
-                                        onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
-                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-
-                                    {{-- Menggunakan fungsi menonaktifkan Angka ^^^ --}}
-                                    @error('phone_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -57,6 +42,21 @@
                                 </div>
 
 
+                                <label for="phone_number" class="form-label">No Telpon Supplier</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">+62</span>
+                                    <input type="number"
+                                        class="form-control @error('phone_number') is-invalid @enderror"
+                                        id="phone_number" name="phone_number"
+                                        placeholder="Harap Di isi No Telpon CTH : 8123455" required
+                                        onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                                    {{-- Menggunakan fungsi menonaktifkan Angka ^^^ --}}
+                                    @error('phone_number')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="type_suppliers" class="form-label">Type Supplier</label>
@@ -94,7 +94,7 @@
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Alamat Supplier</label>
                                     <textarea class="form-control @error('address') is-invalid @enderror" id="address"
-                                        name="address" rows="3" placeholder="Harap Di isi Alamat Supplier"></textarea>
+                                        name="address" rows="3" placeholder="Harap Di isi Alamat Supplier">{{old('address')}}</textarea>
                                     @error('address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -104,7 +104,7 @@
                                     <label for="address_shipping" class="form-label">Alamat Pengiriman</label>
                                     <textarea class="form-control @error('address_shipping') is-invalid @enderror"
                                         id="address_shipping" name="address_shipping" rows="3"
-                                        placeholder="Harap Di isi Alamat Pengiriman" required></textarea>
+                                        placeholder="Harap Di isi Alamat Pengiriman" required>{{old('address_shipping')}}</textarea>
                                     @error('address_shipping')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -136,17 +136,6 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-
-                                {{-- <div class="mb-3">
-                                            <label for="position_pic" class="form-label">Posisi PIC</label>
-                                            <input type="number"
-                                                class="form-control @error('position_pic') is-invalid @enderror"
-                                                id="position_pic" name="position_pic"  placeholder="Opsional">
-                                            @error('position_pic')
-                                            <div class="invalid-feedback">{{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div> --}}
                         <div class="mb-3">
                             <label for="npwp" class="form-label">NPWP</label>
                             <input type="number" class="form-control @error('npwp') is-invalid @enderror" id="npwp"
@@ -160,8 +149,7 @@
                         <div class="mb-3">
                             <label for="scan_npwp" class="form-label">Upload Scan NPWP</label>
                             <input type="file" class="form-control @error('scan_npwp') is-invalid @enderror"
-                                id="scan_npwp" name="scan_npwp" accept="image/*,application/pdf"
-                                onchange="previewNPWP(event)">
+                                id="scan_npwp" name="scan_npwp" onchange="previewNPWP(event)" required>
                             @error('scan_npwp')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -183,7 +171,7 @@
                     <div class="mb-3">
                         <label for="website" class="form-label">Website Supplier</label>
                         <input type="text" class="form-control @error('website') is-invalid @enderror" id="website"
-                            name="website" placeholder="Harap Di isi Nama Website Supplier" required>
+                            name="website" placeholder="Harap Di isi Nama Website Supplier" value="{{old('website')}}" required>
                         @error('website')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -205,7 +193,7 @@
                         <input type="number" class="form-control @error('top') is-invalid @enderror" id="top" name="top"
                             placeholder="Harap Di isi No Telpon CTH : 30 " required
                             onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" max="30"><span
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{old('top')}}" max="30"><span
                             class="input-group-text">Hari</span>
 
                         {{-- Menggunakan fungsi menonaktifkan Angka ^^^ --}}
@@ -245,6 +233,17 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label for="method_shipping" class="form-label">Metode Pengiriman</label>
+                        <input type="text" class="form-control @error('method_shipping') is-invalid @enderror"
+                            id="method_shipping" name="method_shipping" value="{{ old('method_shipping') }}"
+                            placeholder="Harap Di Isi" required>
+                        @error('method_shipping')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
 
                     <div class="mb-3">
                         <label for="duration_shipping" class="form-label">Durasi Pengiriman</label>
@@ -300,7 +299,7 @@
                     <div class="mb-3">
                         <label for="scan_siup" class="form-label">Upload Scan SIUP</label>
                         <input type="file" class="form-control @error('scan_siup') is-invalid @enderror" id="scan_siup"
-                            name="scan_siup" accept="image/*,application/pdf" onchange="previewSIUP(event)">
+                            name="scan_siup" onchange="previewSIUP(event)">
                         @error('scan_siup')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -320,7 +319,7 @@
 
         {{-- Tombol Aksi --}}
         <div class="d-flex justify-content-end mt-4">
-            <a href="" class="btn btn-secondary me-2">Batal</a>
+            <a href="{{route('supplier-company.index')}}" class="btn btn-secondary me-2">Batal</a>
             <button type="submit" class="btn btn-primary">Simpan Barang</button>
         </div>
         </form>

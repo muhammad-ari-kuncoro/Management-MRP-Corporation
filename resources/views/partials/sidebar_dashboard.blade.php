@@ -33,7 +33,7 @@
                     </li>
 
                     {{-- Master --}}
-                    <li class="sidebar-item has-sub {{ Request::is('items*') ? 'active' : '' }}">
+                    <li class="sidebar-item has-sub {{ Request::is('items*') || Request::is('branch-company') || Request::is('supplier-company')  ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
                             <i class="bi bi-stack"></i>
                             <span>Master</span>

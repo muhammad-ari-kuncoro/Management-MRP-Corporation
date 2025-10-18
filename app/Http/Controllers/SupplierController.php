@@ -40,35 +40,30 @@ class SupplierController extends Controller
             'name_suppliers'      => 'required|string|max:255',
             'nickname_suppliers'  => 'required|string|max:255',
             'type_suppliers'      => 'required|string|max:255',
-            'phone_number'        => 'required|string|max:15', // Diubah jadi string, karena Anda memfilter di frontend
+            'phone_number'        => 'required|string|max:15',
             'email'               => 'required|email|unique:tb_suppliers,email',
             'address'             => 'required|string',
             'address_shipping'    => 'required|string',
-            'website'             => 'nullable|url', // Asumsi website tidak wajib
+            'website'             => 'nullable|url',
             'name_pic'            => 'required|string|max:255',
             'phone_number_pic'    => 'required|string|max:15',
-            'position_pic'        => 'nullable|string|max:255',
             'id_region'           => 'required|integer|min:1',
-            'top'                 => 'required|integer|min:1', // Term of Payment (jumlah hari) harus integer
-            'limit_kredit'        => 'required|integer|min:0', // Batas kredit harus integer
+            'top'                 => 'required|integer|min:1',
+            'limit_kredit'        => 'required|integer|min:0',
             'sales'               => 'required|string|max:255',
             'method_payment'      => 'required|string|max:255',
             'duration_shipping'   => 'required|string|max:255',
             'method_shipping'     => 'required|string|max:255',
-            'branch_company_id'   => 'required|exists:tb_branch_company_items,id', // Harus ada di tabel referensi
+            'branch_company_id'   => 'required|exists:tb_branch_company_items,id',
             'brand'               => 'required|string|max:255',
             'bank'                => 'required|string|max:255',
-            'no_rek'              => 'required|string|max:30', // Nomor rekening lebih baik string
-            'npwp'                => 'required|string|max:30', // NPWP lebih baik string (untuk tanda hubung/titik)
-            'siup'                => 'required|string|max:30', // SIUP lebih baik string
-            'scan_npwp'           => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048', // Opsional, file gambar/pdf max 2MB
-            'scan_siup'           => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048', // Opsional, file gambar/pdf max 2MB
-        ], [
-            // Custom messages jika diperlukan
-            'email.unique' => 'Alamat email ini sudah terdaftar sebagai supplier.',
-            // ... pesan lainnya
+            'no_rek'              => 'required|string|max:30',
+            'npwp'                => 'required|string|max:30',
+            'siup'                => 'required|string|max:30',
+            'scan_npwp'           => 'nullable|max:255|mimes:jpg,jpeg,png,pdf|min:3',
+            'scan_siup'           => 'nullable|max:255|mimes:jpg,jpeg,png,pdf|min:3',
         ]);
-
+        dd($validatedData);
         // 2. MENGURUS UPLOAD FILE
         // Menginisialisasi path untuk disimpan ke database
         $npwpPath = null;
@@ -96,7 +91,6 @@ class SupplierController extends Controller
                 'website'             => $validatedData['website'] ?? null, // Default null jika tidak diisi
                 'name_pic'            => $validatedData['name_pic'],
                 'phone_number_pic'    => $validatedData['phone_number_pic'],
-                'position_pic'        => $validatedData['position_pic'] ?? null,
                 'id_region'           => $validatedData['id_region'],
                 'top'                 => $validatedData['top'],
                 'limit_kredit'        => $validatedData['limit_kredit'],
