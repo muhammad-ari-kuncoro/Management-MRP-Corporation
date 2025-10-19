@@ -15,6 +15,7 @@ class SupplierController extends Controller
     {
         //
         $data['judul'] = 'Master Data Supplier';
+        $data['data_supplier']  = Supplier::all();
         return view('supplier.index',$data);
     }
 

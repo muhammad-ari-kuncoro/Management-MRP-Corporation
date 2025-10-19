@@ -22,18 +22,11 @@
                     <!-- Input Search (ditempatkan di kanan) -->
                     <form action="" method="GET" class="d-flex" role="search">
                         <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Cari barang..." value="">
-                            <button class="btn btn-outline-secondary" type="submit">
-                                <i class="bi bi-search"></i>
+                            <button class="btn btn-outline-success" type="button" onclick="window.print()">
+                                <i class="bi bi-printer"></i> Print Data Excel
                             </button>
-                            <!-- Tambahkan tombol reset jika ada nilai pencarian -->
-                            {{-- @if(request('search'))
-                                <a href="{{ route('barang.index') }}" class="btn btn-outline-danger" title="Hapus
-                            Pencarian">
-                            <i class="bi bi-x-lg"></i>
-                            </a>
-                            @endif --}}
                         </div>
+
                     </form>
 
                 </div>
@@ -55,19 +48,18 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($data_supplier as $data )
 
                             <tr>
-                                <td>No 1</td>
-                                <td>TEST</td>
-                                <td>TEST</td>
-                                <td>TEST</td>
-                                <td>TEST</td>
-                                <td>TEST</td>
-                                <td>TEST</td>
-                                <td>TEST</td>
-                                <td>
-                                    TEST
-                                </td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $data->name_suppliers }}</td>
+                                <td>{{ $data->type_suppliers }}</td>
+                                <td>{{ $data->phone_number }}</td>
+                                <td>{{ $data->name_pic }}</td>
+                                <td>{{ $data->email }}</td>
+                                <td>{{ $data->top }}</td>
+                                <td>{{ $data->limit_kredit}}</td>
+                                <td>{{ $data->blacklist }}</td>
                                 <td>
                                     <div class="d-flex gap-2">
                                         <a href="" class="btn btn-sm btn-warning">
@@ -75,18 +67,19 @@
                                         </a>
                                         <!-- Tombol Edit -->
                                         <!-- Tombol Hapus -->
-                                        <form action="#" method="POST"
-                                            onsubmit="return confirm('Yakin hapus data ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                                        <form action="" method="POST"
+                                        onsubmit="return confirm('Yakin hapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
                     </table>
 
                 </div>

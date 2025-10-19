@@ -16,7 +16,7 @@ class BranchCompanyController extends Controller
     {
         //
         $data['judul'] = 'Branch Company Page';
-        $data['data_branch'] = BranchCompany::paginate(10);
+        $data['data_branch'] = BranchCompany::all();
         return view('branch-company.index',$data);
     }
 
