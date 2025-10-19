@@ -62,19 +62,12 @@
                                 <td>{{ $data->blacklist }}</td>
                                 <td>
                                     <div class="d-flex gap-2">
-                                        <a href="" class="btn btn-sm btn-warning">
+                                        <a href="{{ route('supplier-company.edit',$data->id) }}" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         <!-- Tombol Edit -->
                                         <!-- Tombol Hapus -->
-                                        <form action="" method="POST"
-                                        onsubmit="return confirm('Yakin hapus data ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+
                                 </div>
                             </td>
                         </tr>

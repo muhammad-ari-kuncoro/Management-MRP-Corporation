@@ -10,4 +10,11 @@ class Supplier extends Model
     use HasFactory;
     protected $table = 'tb_suppliers';
     protected $guarded = ['id'];
+
+    public function branchCompany()
+    {
+        return $this->belongsTo(BranchCompany::class, 'branch_company_id', 'id');
+    }
+
+
 }

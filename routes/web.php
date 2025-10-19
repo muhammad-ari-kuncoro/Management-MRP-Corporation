@@ -76,6 +76,8 @@ Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
     Route::get('/',[SupplierController::class, 'index'])->name('index');
     Route::get('/create',[SupplierController::class, 'create'])->name('create');
     Route::post('/store',[SupplierController::class, 'store'])->name('store');
+    Route::get('/supplier-company/edit/{id}',[SupplierController::class, 'edit'])->name('edit');
+    Route::put('/update-supplier/{id}',[SupplierController::class, 'update'])->name('update');
 });
 
 
