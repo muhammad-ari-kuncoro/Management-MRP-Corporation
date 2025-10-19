@@ -60,24 +60,30 @@ class SupplierController extends Controller
             'no_rek'              => 'required|string|max:30',
             'npwp'                => 'required|string|max:30',
             'siup'                => 'required|string|max:30',
-            'scan_npwp'           => 'nullable|max:255|mimes:jpg,jpeg,png,pdf|min:3',
-            'scan_siup'           => 'nullable|max:255|mimes:jpg,jpeg,png,pdf|min:3',
-        ]);
-        dd($validatedData);
-        // 2. MENGURUS UPLOAD FILE
-        // Menginisialisasi path untuk disimpan ke database
-        $npwpPath = null;
-        $siupPath = null;
+            'scan_siup'           => 'nullable|max:255|min:10',
+            'scan_npwp'           => 'nullable|max:255|min:10'
 
+        ]);
+        // dd($request->all());
+        $scanNPWPPath = null;
+        $scanSIUP = null;
         if ($request->hasFile('scan_npwp')) {
-            // Simpan file ke storage (misalnya folder 'public/scans/npwp')
-            $npwpPath = $request->file('scan_npwp')->store('scans/npwp', 'public');
+            $path = $request->file('scan_npwp')->store('scans/npwp', 'public');
+            $scanNPWPPath = str_replace('public/', 'storage/', $path);
+            // dd('NPWP tersimpan di:', $scanNPWPPath);
         }
 
         if ($request->hasFile('scan_siup')) {
-            // Simpan file ke storage (misalnya folder 'public/scans/siup')
-            $siupPath = $request->file('scan_siup')->store('scans/siup', 'public');
+            $path = $request->file('scan_siup')->store('scans/siup', 'public');
+            $scanSIUP = str_replace('public/', 'storage/', $path);
+            // dd('NPWP tersimpan di:', $scanSIUP);
         }
+
+        // if ($request->hasFile('scan_siup')) {
+        //     $path = $request->file('scan_siup')->store('scans/siup', 'public');
+        //     $scanSIUP = str_replace('public/', 'storage/', $path);
+        // }
+
         // 3. MEMBUAT DATA SUPPLIER BARU
         try {
             Supplier::create([
@@ -88,7 +94,7 @@ class SupplierController extends Controller
                 'email'               => $validatedData['email'],
                 'address'             => $validatedData['address'],
                 'address_shipping'    => $validatedData['address_shipping'],
-                'website'             => $validatedData['website'] ?? null, // Default null jika tidak diisi
+                'website'             => $validatedData['website'] ?? null,
                 'name_pic'            => $validatedData['name_pic'],
                 'phone_number_pic'    => $validatedData['phone_number_pic'],
                 'id_region'           => $validatedData['id_region'],
@@ -98,15 +104,15 @@ class SupplierController extends Controller
                 'method_payment'      => $validatedData['method_payment'],
                 'duration_shipping'   => $validatedData['duration_shipping'],
                 'method_shipping'     => $validatedData['method_shipping'],
-                'blacklist'           => 'no', // Default
+                'blacklist'           => 'no',
                 'branch_company_id'   => $validatedData['branch_company_id'],
                 'brand'               => $validatedData['brand'],
-                'bank'                => $validatedData['bank'], // Menggunakan 'bank' sesuai skema migrasi Anda
+                'bank'                => $validatedData['bank'],
                 'no_rek'              => $validatedData['no_rek'],
                 'npwp'                => $validatedData['npwp'],
                 'siup'                => $validatedData['siup'],
-                'scan_npwp'           => $npwpPath,
-                'scan_siup'           => $siupPath,
+                'scan_npwp'           => $scanNPWPPath,
+                'scan_siup'           => $scanSIUP,
             ]);
 
             // 4. REDIRECT DAN PESAN SUKSES

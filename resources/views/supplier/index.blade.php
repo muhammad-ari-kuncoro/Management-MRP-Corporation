@@ -39,9 +39,10 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover" id="table1">
+                    <table class="table table-hover" id="myTable9">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Nama Supplier</th>
                                 <th>Type Supplier</th>
                                 <th>Phone Number Supplier</th>
@@ -56,6 +57,7 @@
                         <tbody>
 
                             <tr>
+                                <td>No 1</td>
                                 <td>TEST</td>
                                 <td>TEST</td>
                                 <td>TEST</td>
@@ -64,10 +66,6 @@
                                 <td>TEST</td>
                                 <td>TEST</td>
                                 <td>
-                                    {{-- <span class="badge {{ $data->status == 'Active' ? 'bg-success' : 'bg-danger' }}">
-                                    {{ ucfirst($data->status) }}
-                                    </span> --}}
-
                                     TEST
                                 </td>
                                 <td>
@@ -202,3 +200,15 @@
     </div>
 </div>
 @endsection
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+@endpush
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#myTable9').DataTable();
+});
+</script>
+@endpush
+

@@ -11,7 +11,8 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('supplier-company.store') }}" method="POST">
+                    {{-- Jngan Lupa tambahkan Enctype untuk menginport suatu file,image , dll --}}
+                    <form action="{{ route('supplier-company.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             {{-- Kolom Kiri --}}
@@ -94,7 +95,8 @@
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Alamat Supplier</label>
                                     <textarea class="form-control @error('address') is-invalid @enderror" id="address"
-                                        name="address" rows="3" placeholder="Harap Di isi Alamat Supplier">{{old('address')}}</textarea>
+                                        name="address" rows="3"
+                                        placeholder="Harap Di isi Alamat Supplier">{{old('address')}}</textarea>
                                     @error('address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -104,7 +106,8 @@
                                     <label for="address_shipping" class="form-label">Alamat Pengiriman</label>
                                     <textarea class="form-control @error('address_shipping') is-invalid @enderror"
                                         id="address_shipping" name="address_shipping" rows="3"
-                                        placeholder="Harap Di isi Alamat Pengiriman" required>{{old('address_shipping')}}</textarea>
+                                        placeholder="Harap Di isi Alamat Pengiriman"
+                                        required>{{old('address_shipping')}}</textarea>
                                     @error('address_shipping')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -136,197 +139,207 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                        <div class="mb-3">
-                            <label for="npwp" class="form-label">NPWP</label>
-                            <input type="number" class="form-control @error('npwp') is-invalid @enderror" id="npwp"
-                                name="npwp" value="{{ old('npwp') ?? 0 }}" min="0" placeholder="Harap Di Isi NPWP"
-                                required>
-                            @error('npwp')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                <div class="mb-3">
+                                    <label for="npwp" class="form-label">NPWP</label>
+                                    <input type="number" class="form-control @error('npwp') is-invalid @enderror"
+                                        id="npwp" name="npwp" value="{{ old('npwp')}}" min="0"
+                                        placeholder="Harap Di Isi NPWP" required>
+                                    @error('npwp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="mb-3">
-                            <label for="scan_npwp" class="form-label">Upload Scan NPWP</label>
-                            <input type="file" class="form-control @error('scan_npwp') is-invalid @enderror"
-                                id="scan_npwp" name="scan_npwp" onchange="previewNPWP(event)" required>
-                            @error('scan_npwp')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                                <div class="mb-3">
+                                    <label for="scan_npwp" class="form-label">Upload Scan NPWP</label>
+                                    <input type="file" class="form-control @error('scan_npwp') is-invalid @enderror"
+                                        id="scan_npwp" name="scan_npwp" onchange="previewNPWP(event)">
+                                    @error('scan_npwp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
 
-                            {{-- Preview NPWP --}}
-                            <div class="mt-3" id="preview-container-npwp" style="display:none;">
-                                <p class="mb-1 fw-bold">Preview:</p>
-                                <img id="preview-image-npwp" src="#" alt="Preview SIUP"
-                                    style="max-width: 300px; border: 1px solid #ccc; border-radius: 5px;">
-                                <iframe id="preview-pdf-npwp"
-                                    style="width: 100%; height: 400px; border: 1px solid #ccc; display:none;"></iframe>
+
+                                    <div class="mt-3" id="preview-container-npwp" style="display:none;">
+                                        <p class="mb-1 fw-bold">Preview:</p>
+                                        <img id="preview-image-npwp" src="#" alt="Preview npwp"
+                                            style="max-width: 300px; border: 1px solid #ccc; border-radius: 5px;">
+                                        <iframe id="preview-pdf-npwp"
+                                            style="width: 100%; height: 400px; border: 1px solid #ccc; display:none;"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Kolom Kanan --}}
+                            <div class="col-md-6">
+
+                                <div class="mb-3">
+                                    <label for="website" class="form-label">Website Supplier</label>
+                                    <input type="text" class="form-control @error('website') is-invalid @enderror"
+                                        id="website" name="website" placeholder="Harap Di isi Nama Website Supplier"
+                                        value="{{old('website')}}" required>
+                                    @error('website')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="no_rek" class="form-label">No Rekening Pembayaran</label>
+                                    <input type="number" class="form-control @error('no_rek') is-invalid @enderror"
+                                        id="no_rek" name="no_rek" value="{{ old('no_rek') ?? 0 }}"
+                                        placeholder="Harap Di isi No Rekening Supplier" required min="1">
+                                    @error('no_rek')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <label for="top" class="form-label">Jatoh Tempo</label>
+                                <div class="input-group mb-3">
+
+                                    <input type="number" class="form-control @error('top') is-invalid @enderror"
+                                        id="top" name="top" placeholder="Harap Di isi No Telpon CTH : 30 " required
+                                        onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{old('top')}}"
+                                        max="30"><span class="input-group-text">Hari</span>
+
+                                    {{-- Menggunakan fungsi menonaktifkan Angka ^^^ --}}
+                                    @error('top')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+                                <div class="mb-3">
+                                    <label for="limit_kredit" class="form-label">Limit Pembayaran Kredit</label>
+                                    <input type="number"
+                                        class="form-control @error('limit_kredit') is-invalid @enderror"
+                                        id="limit_kredit" name="limit_kredit" value="{{ old('limit_kredit') ?? 0 }}"
+                                        required
+                                        onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    @error('limit_kredit')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+                                <div class="mb-3">
+                                    <label for="sales" class="form-label">Nama Sales</label>
+                                    <input type="text" class="form-control @error('sales') is-invalid @enderror"
+                                        id="sales" name="sales" value="{{ old('sales') }}"
+                                        placeholder="Harap Di Isi Nama Sales" required>
+                                    @error('sales')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="method_payment" class="form-label">Metode Pembayaran</label>
+                                    <input type="text"
+                                        class="form-control @error('method_payment') is-invalid @enderror"
+                                        id="method_payment" name="method_payment" value="{{ old('method_payment') }}"
+                                        placeholder="Harap Di Isi" required>
+                                    @error('method_payment')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="method_shipping" class="form-label">Metode Pengiriman</label>
+                                    <input type="text"
+                                        class="form-control @error('method_shipping') is-invalid @enderror"
+                                        id="method_shipping" name="method_shipping" value="{{ old('method_shipping') }}"
+                                        placeholder="Harap Di Isi" required>
+                                    @error('method_shipping')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+                                <div class="mb-3">
+                                    <label for="duration_shipping" class="form-label">Durasi Pengiriman</label>
+                                    <input type="text"
+                                        class="form-control @error('duration_shipping') is-invalid @enderror"
+                                        id="duration_shipping" name="duration_shipping"
+                                        value="{{ old('duration_shipping') }}" min="0"
+                                        placeholder="Harap Di Isi Paling Lambat Pengiriman" required>
+                                    @error('duration_shipping')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="id_region" class="form-label">ID Region</label>
+                                    <input type="number" class="form-control @error('id_region') is-invalid @enderror"
+                                        id="id_region" name="id_region" value="{{ old('no_rek') ?? 0 }}" min="0"
+                                        required>
+                                    @error('id_region')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="branch_company_id" class="form-label">Pilih Cabang</label>
+                                        <select name="branch_company_id" id="branch_company_id" name="branch_company_id"
+                                            class="form-select" required>
+                                            <option value="" disabled selected>-- Pilih Cabang barang --</option>
+                                            @foreach ($branchCompany as $data)
+                                            <option value="{{$data->id}}">{{$data->name_branch_company}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="bank" class="form-label">Nama Bank Supplier</label>
+                                    <input type="text" class="form-control @error('bank') is-invalid @enderror"
+                                        id="bank" name="bank" required>
+                                    @error('bank')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="siup" class="form-label">SIUP</label>
+                                    <input type="text" class="form-control @error('siup') is-invalid @enderror"
+                                        id="siup" name="siup" value="{{ old('siup') ?? 0 }}"
+                                        placeholder="Harap Di isi No SIUP " required>
+                                    @error('siup')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="scan_siup" class="form-label">Upload Scan SIUP</label>
+                                    <input type="file" class="form-control @error('scan_siup') is-invalid @enderror"
+                                        id="scan_siup" name="scan_siup" onchange="previewSIUP(event)">
+                                    @error('scan_siup')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+
+
+                                    <div class="mt-3" id="preview-container-siup" style="display:none;">
+                                        <p class="mb-1 fw-bold">Preview:</p>
+                                        <img id="preview-image-siup" src="#" alt="Preview SIUP"
+                                            style="max-width: 300px; border: 1px solid #ccc; border-radius: 5px;">
+                                        <iframe id="preview-pdf-siup"
+                                            style="width: 100%; height: 400px; border: 1px solid #ccc; display:none;"></iframe>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                 </div>
 
-                {{-- Kolom Kanan --}}
-                <div class="col-md-6">
-
-                    <div class="mb-3">
-                        <label for="website" class="form-label">Website Supplier</label>
-                        <input type="text" class="form-control @error('website') is-invalid @enderror" id="website"
-                            name="website" placeholder="Harap Di isi Nama Website Supplier" value="{{old('website')}}" required>
-                        @error('website')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="no_rek" class="form-label">No Rekening Pembayaran</label>
-                        <input type="number" class="form-control @error('no_rek') is-invalid @enderror" id="no_rek"
-                            name="no_rek" value="{{ old('no_rek') ?? 0 }}"
-                            placeholder="Harap Di isi No Rekening Supplier" required min="1">
-                        @error('no_rek')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <label for="top" class="form-label">Jatoh Tempo</label>
-                    <div class="input-group mb-3">
-
-                        <input type="number" class="form-control @error('top') is-invalid @enderror" id="top" name="top"
-                            placeholder="Harap Di isi No Telpon CTH : 30 " required
-                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{old('top')}}" max="30"><span
-                            class="input-group-text">Hari</span>
-
-                        {{-- Menggunakan fungsi menonaktifkan Angka ^^^ --}}
-                        @error('top')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label for="limit_kredit" class="form-label">Limit Pembayaran Kredit</label>
-                        <input type="number" class="form-control @error('limit_kredit') is-invalid @enderror"
-                            id="limit_kredit" name="limit_kredit" value="{{ old('limit_kredit') ?? 0 }}" required
-                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        @error('limit_kredit')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label for="sales" class="form-label">Nama Sales</label>
-                        <input type="text" class="form-control @error('sales') is-invalid @enderror" id="sales"
-                            name="sales" value="{{ old('sales') }}" placeholder="Harap Di Isi Nama Sales" required>
-                        @error('sales')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="method_payment" class="form-label">Metode Pembayaran</label>
-                        <input type="text" class="form-control @error('method_payment') is-invalid @enderror"
-                            id="method_payment" name="method_payment" value="{{ old('method_payment') }}"
-                            placeholder="Harap Di Isi" required>
-                        @error('method_payment')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="method_shipping" class="form-label">Metode Pengiriman</label>
-                        <input type="text" class="form-control @error('method_shipping') is-invalid @enderror"
-                            id="method_shipping" name="method_shipping" value="{{ old('method_shipping') }}"
-                            placeholder="Harap Di Isi" required>
-                        @error('method_shipping')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label for="duration_shipping" class="form-label">Durasi Pengiriman</label>
-                        <input type="text" class="form-control @error('duration_shipping') is-invalid @enderror"
-                            id="duration_shipping" name="duration_shipping" value="{{ old('duration_shipping') }}"
-                            min="0" placeholder="Harap Di Isi Paling Lambat Pengiriman" required>
-                        @error('duration_shipping')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="id_region" class="form-label">ID Region</label>
-                        <input type="number" class="form-control @error('id_region') is-invalid @enderror"
-                            id="id_region" name="id_region" value="{{ old('no_rek') ?? 0 }}" min="0" required>
-                        @error('id_region')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="branch_company_id" class="form-label">Pilih Cabang</label>
-                            <select name="branch_company_id" id="branch_company_id" name="branch_company_id"
-                                class="form-select" required>
-                                <option value="" disabled selected>-- Pilih Cabang barang --</option>
-                                @foreach ($branchCompany as $data)
-                                <option value="{{$data->id}}">{{$data->name_branch_company}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="bank" class="form-label">Nama Bank Supplier</label>
-                        <input type="text" class="form-control @error('bank') is-invalid @enderror" id="bank"
-                            name="bank" required>
-                        @error('bank')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="siup" class="form-label">SIUP</label>
-                        <input type="text" class="form-control @error('siup') is-invalid @enderror" id="siup"
-                            name="siup" value="{{ old('siup') ?? 0 }}" placeholder="Harap Di isi No SIUP " required>
-                        @error('siup')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="scan_siup" class="form-label">Upload Scan SIUP</label>
-                        <input type="file" class="form-control @error('scan_siup') is-invalid @enderror" id="scan_siup"
-                            name="scan_siup" onchange="previewSIUP(event)">
-                        @error('scan_siup')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-
-
-                        <div class="mt-3" id="preview-container-siup" style="display:none;">
-                            <p class="mb-1 fw-bold">Preview:</p>
-                            <img id="preview-image-siup" src="#" alt="Preview SIUP"
-                                style="max-width: 300px; border: 1px solid #ccc; border-radius: 5px;">
-                            <iframe id="preview-pdf-siup"
-                                style="width: 100%; height: 400px; border: 1px solid #ccc; display:none;"></iframe>
-                        </div>
-                    </div>
+                {{-- Tombol Aksi --}}
+                <div class="d-flex justify-content-end mt-4">
+                    <a href="{{route('supplier-company.index')}}" class="btn btn-secondary me-2">Batal</a>
+                    <button type="submit" class="btn btn-primary">Simpan Barang</button>
                 </div>
+                </form>
+                {{-- Form berakhir di sini --}}
             </div>
         </div>
-
-        {{-- Tombol Aksi --}}
-        <div class="d-flex justify-content-end mt-4">
-            <a href="{{route('supplier-company.index')}}" class="btn btn-secondary me-2">Batal</a>
-            <button type="submit" class="btn btn-primary">Simpan Barang</button>
-        </div>
-        </form>
-        {{-- Form berakhir di sini --}}
     </div>
-</div>
-</div>
 </div>
 </div>
 @endsection
