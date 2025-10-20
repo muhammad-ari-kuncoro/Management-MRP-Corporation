@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreign("supplier_id")->references("id")->on("tb_suppliers");
             $table->string('estimation_delivery_date')->nullable();
             $table->string('note')->nullable()->nullable();
-
             $table->enum('status', ['pph_new','draft', 'pending', 'waiting_gr','partial_items','done','rejected'])->default('draft');
             $table->string('currency')->nullable();
             $table->string('currency_rate')->nullable();

@@ -38,6 +38,7 @@ class PurchaseOrderDetailController extends Controller
 
     // Simpan PO draft ke view
     $data['po_draft'] = $po_draft;
+    $data['judul']  = 'Tambah Data';
 
     // Ambil detail barang untuk PO draft
     $data['detail_po'] = PurchaseOrderDetail::with('items')
@@ -50,9 +51,17 @@ class PurchaseOrderDetailController extends Controller
  public function create(Request $request)
 {
       $request->validate([
-        'items_id' => 'required',
-        'qty' => 'required|numeric|min:1',
-        'discount' => 'required|numeric|min:0|max:100',
+        'items_id'                    => 'required',
+        'qty'                         => 'required|numeric|min:1',
+        'po_date'                     => 'required',
+        'supplier_id'                 => 'required',
+        'note'                        => 'required|min:1|max:200',
+        'currency'                    => 'required|min:1|max:100',
+        'currency_rate'               => 'required|min:1|max:100',
+        'transportation_fee'          => 'required|min:1|max:100',
+        'estimation_delivery_date'    => 'required|min:1|max:100',
+        'discount'                    => 'required|numeric|min:0|max:100',
+        'journal_id'                  => 'nullable|nume  ric|min:0|max:100',
     ]);
     // dd($request);
 
@@ -66,21 +75,20 @@ class PurchaseOrderDetailController extends Controller
     // 2️⃣ Kalau belum ada, buat otomatis
     if (!$purchaseOrder) {
         $purchaseOrder = PurchaseOrder::create([
-            'po_no' => 'PO-' . now()->format('Ymd'),
-            'po_date' => now(),
-            'estimation_delivery_date' => 'NULLABLE',
-            'note' => 'NULLABLE',
-            'term_of_payment' => 'NULLABLE',
-            'currency' => 1,
-            'currency_rate' => 1,
-            'transportation_fee' => 'NULLABLE',
-            'journal_id' => 'NULLABLE',
-            'user_id' => Auth::id(),
-            'status' => 'draft',
+            'po_no'                    => 'PO-' . now()->format('Ymd'),
+            'po_date'                  => $request->po_date,
+            'supplier_id'              => $request->supplier_id,
+            'estimation_delivery_date' => $request->estimation_delivery_date,
+            'note'                     => $request->note,
+            'currency'                 => $request->currency,
+            'currency_rate'            => $request->currency_rate,
+            'transportation_fee'       => $request->transportation_fee,
+            'journal_id'               => $request->journal_id,
+            'user_id'                  => Auth::id(),
+            'status'                   => 'draft',
         ]);
 
     }
-
 
     $item = Items::findOrFail($request->items_id);
     $price = $item->price_item;

@@ -41,7 +41,7 @@ class BranchCompanyController extends Controller
                 'email_branch_company'      => 'required|max:255|min:5',
                 'logo'                      => 'required|max:255|min:3',
                 'status'                    => 'required|max:20|min:5',
-                'phone_number'              => 'required|min:11|max:13'
+                'phone_number'              => 'required|min:10|max:13'
 
         ]);
 

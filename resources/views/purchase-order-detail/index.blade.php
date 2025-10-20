@@ -34,23 +34,6 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label>Tempo Bayar</label>
-                            <input type="number" class="form-control" name="term_of_payment"
-                                value="{{ $purchaseOrder->term_of_payment ?? '30' }}">
-                        </div>
-                        <div class="col-6 mb-3 d-flex align-items-end">
-                            <span>Hari</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>No Referensi</label>
-                        <input type="text" class="form-control" name="reference_no"
-                            placeholder="Masukkan nomor referensi" value="{{ $purchaseOrder->reference_no ?? '' }}">
-                    </div>
                 </div>
 
                 <div class="col-md-6">
