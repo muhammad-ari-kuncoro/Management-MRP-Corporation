@@ -18,7 +18,6 @@ class PurchaseOrder extends Model
         'supplier_id',
         'estimation_delivery_date',
         'note',
-        'term_of_payment',
         'status',
         'currency',
         'currency_rate',
