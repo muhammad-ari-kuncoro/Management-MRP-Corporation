@@ -28,6 +28,10 @@ return new class extends Migration
             $table->string('approved_by')->nullable();
             $table->datetime('approved_at')->nullable();
             $table->string('transportation_fee')->nullable();
+            $table->string('sub_total')->nullable();
+            $table->string('total_diskon_harga')->nullable();
+            $table->string('PPN')->nullable();
+            $table->string('grand_total')->nullable();
             $table->string('journal_id')->nullable();
             $table->timestamps();
         });

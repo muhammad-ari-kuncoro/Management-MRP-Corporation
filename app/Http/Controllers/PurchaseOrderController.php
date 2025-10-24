@@ -43,56 +43,65 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'po_no' => 'required|unique:tb_purchase_orders,po_no',
-            'po_date' => 'required|date',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'estimation_delivery_date' => 'nullable|date',
-            'note' => 'nullable|string',
-            'currency' => 'nullable|string',
-            'currency_rate' => 'nullable|numeric',
-            'transportation_fee' => 'nullable|numeric',
-            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
-        ]);
+    $request->validate([
+    'po_date'                  => 'required|date',
+    'supplier_id'              => 'required|exists:tb_suppliers,id',
+    'estimation_delivery_date' => 'nullable|date',
+    'note'                     => 'nullable|string',
+    'currency'                 => 'nullable|string',
+    'currency_rate'            => 'nullable|numeric',
+    'transportation_fee'       => 'nullable|numeric',
+    'attachment'               => 'nullable|file',
+    'sub_total'                => 'nullable',
+    'total_diskon_harga'       => 'nullable',
+    'PPN'                      => 'nullable|numeric',
+    'grand_total'              => 'nullable',
+]);
 
-        DB::beginTransaction();
-        try {
-            // Upload file attachment jika ada
-            $attachmentPath = null;
-            if ($request->hasFile('attachment')) {
-                $attachmentPath = $request->file('attachment')->store('purchase-orders', 'public');
-            }
+try {
+    $poDraft = PurchaseOrder::where('user_id', Auth::user()->id)
+                ->where('status', 'draft')
+                ->first();
 
-            // Generate PO Number jika belum ada
-            $poNumber = $request->po_no ?? $this->generatePONumber();
-
-            // Simpan Purchase Order
-            $purchaseOrder = PurchaseOrder::create([
-                'po_no' => $poNumber,
-                'po_date' => $request->po_date,
-                'user_id' => Auth::id(),
-                'supplier_id' => $request->supplier_id,
-                'estimation_delivery_date' => $request->estimation_delivery_date,
-                'note' => $request->note,
-                'status' => 'draft',
-                'currency' => $request->currency ?? 'IDR',
-                'currency_rate' => $request->currency_rate ?? 1,
-                'transportation_fee' => $request->transportation_fee ?? 0,
-                'attachment' => $attachmentPath
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('purchase-order.edit', $purchaseOrder->id)
-                ->with('success', 'Purchase Order berhasil dibuat. Silakan tambahkan item.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->with('error', 'Gagal membuat Purchase Order: ' . $e->getMessage())
-                ->withInput();
-        }
+    if (!$poDraft) {
+        return redirect()->back()->with('error', 'Harap Masukkan Barang!');
     }
+
+    // Upload file attachment jika ada
+    $attachmentPath = $poDraft->attachment; // default: tetap pakai yg lama
+    if ($request->hasFile('attachment')) {
+        $attachmentPath = $request->file('attachment')->store('purchase-orders', 'public');
+    }
+
+    // Bersihkan angka dari format currency / persen
+    $cleanNumber = fn($value) => $value !== null
+        ? floatval(str_replace(['Rp', '.', ',', '%', ' '], ['', '', '.', '', ''], $value))
+        : null;
+
+    $poDraft->po_no                      = $this->generatePONumber();
+    $poDraft->po_date                    = $request->po_date;
+    $poDraft->supplier_id                = $request->supplier_id;
+    $poDraft->estimation_delivery_date   = $request->estimation_delivery_date;
+    $poDraft->note                        = $request->note;
+    $poDraft->currency                    = $request->currency;
+    $poDraft->currency_rate               = $cleanNumber($request->currency_rate);
+    $poDraft->transportation_fee          = $cleanNumber($request->transportation_fee);
+    $poDraft->attachment                   = $attachmentPath;
+    $poDraft->approved_by                  = 'Approve';
+    $poDraft->approved_at                  = null; // bukan 'Nullable'
+    $poDraft->sub_total                    = $cleanNumber($request->sub_total);
+    $poDraft->total_diskon_harga           = $cleanNumber($request->total_diskon_harga);
+    $poDraft->PPN                           = $cleanNumber($request->PPN);
+    $poDraft->grand_total                   = $cleanNumber($request->grand_total);
+    $poDraft->status                        = 'pending';
+    $poDraft->save();
+
+    return redirect()->route('purchase-order.index')->back()->with(['success' => 'Updated Success !', 'scrollTo' => 'step']);
+} catch (\Throwable $th) {
+    return redirect()->back()->with(['failed'=> $th->getMessage(), 'scrollTo' => 'step']);
+}
+    }
+
 
     /**
      * Display the specified purchase order

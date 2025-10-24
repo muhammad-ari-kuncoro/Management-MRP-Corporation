@@ -67,13 +67,16 @@ class PurchaseOrderDetailController extends Controller
     // dd($request);
 
 
-    // 1️⃣ Cek apakah sudah ada PO draft untuk user ini
+
+        try {
+            //code...
+            // 1️⃣ Cek apakah sudah ada PO draft untuk user ini
     $purchaseOrder = PurchaseOrder::where('user_id', Auth::id())
         ->where('status', 'draft')
         ->latest()
         ->first();
 
-    // 2️⃣ Kalau belum ada, buat otomatis
+          // 2️⃣ Kalau belum ada, buat otomatis
     if (!$purchaseOrder) {
         $purchaseOrder = PurchaseOrder::create([
             'po_no'                    => 'PO-' . now()->format('Ymd'),
@@ -97,8 +100,6 @@ class PurchaseOrderDetailController extends Controller
     $hasilQuantityKaliprice = $price * $qty;
     $discount = $request->discount;
     $total = ($hasilQuantityKaliprice) - ($hasilQuantityKaliprice * ($discount / 100));
-    // 1 10 135
-    // 3️⃣ Buat detail item
     PurchaseOrderDetail::create([
         'purchase_order_id' => $purchaseOrder->id,
         'items_id' => $item->id,
@@ -106,8 +107,11 @@ class PurchaseOrderDetailController extends Controller
         'discount' => $discount,
         'total' => $total
     ]);
-
-    return redirect()->back()->with('success', 'Item berhasil ditambahkan ke Purchase Order (Draft)');
+    return redirect()->back()->with(['success'=> 'Update Sukses !', 'scrollTo' => 'step']);
+    } catch (\Throwable $th) {
+            //throw $th;
+    return redirect()->back()->with(['failed'=> $th->getMessage(), 'scrollTo' => 'step']);
+    }
 }
 
 
