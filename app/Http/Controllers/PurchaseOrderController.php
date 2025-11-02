@@ -87,7 +87,7 @@ try {
     $poDraft->currency_rate               = $cleanNumber($request->currency_rate);
     $poDraft->transportation_fee          = $cleanNumber($request->transportation_fee);
     $poDraft->attachment                   = $attachmentPath;
-    $poDraft->approved_by                  = 'Approve';
+    $poDraft->approved_by                  = 'Not Approve';
     $poDraft->approved_at                  = null; // bukan 'Nullable'
     $poDraft->sub_total                    = $cleanNumber($request->sub_total);
     $poDraft->total_diskon_harga           = $cleanNumber($request->total_diskon_harga);
@@ -96,7 +96,8 @@ try {
     $poDraft->status                        = 'pending';
     $poDraft->save();
 
-    return redirect()->route('purchase-order.index')->back()->with(['success' => 'Updated Success !', 'scrollTo' => 'step']);
+    return redirect()->route('purchase-order.index')
+        ->with(['success' => 'Updated Success !', 'scrollTo' => 'step']);
 } catch (\Throwable $th) {
     return redirect()->back()->with(['failed'=> $th->getMessage(), 'scrollTo' => 'step']);
 }

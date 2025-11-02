@@ -238,18 +238,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Loop semua baris item di tabel
     const rows = document.querySelectorAll('#itemTableBody tr[data-id]');
     rows.forEach(row => {
-      const totalCell = row.querySelector('.total-cell') || row.querySelector('td:nth-child(8)');
-      const discountCell = row.querySelector('.discount-value-cell') || row.querySelector('td:nth-child(7)');
+  const totalCell = row.querySelector('.total-cell') || row.querySelector('td:nth-child(8)');
+  const discountCell = row.querySelector('.discount-value-cell') || row.querySelector('td:nth-child(7)');
 
-      const totalText = totalCell ? totalCell.textContent : '0';
-      const discountText = discountCell ? discountCell.textContent : '0';
+  const totalText = totalCell ? totalCell.textContent : '0';
+  const discountText = discountCell ? discountCell.textContent : '0';
 
-      const totalValue = parseRupiah(totalText);
-      const discountValue = parseRupiah(discountText);
+  const totalValue = parseRupiah(totalText);
+  const discountPercent = parseRupiah(discountText); // misal 10 = 10%
 
-      subtotal += totalValue;
-      totalDiskon += discountValue;
-    });
+  subtotal += totalValue;
+  totalDiskon += totalValue * (discountPercent / 100); // ✅ diskon persen
+});
+
 
     // Ambil nilai PPN dan Ongkir
     const ppnPersen = parseFloat(document.getElementById('ppn-input')?.value || 11) / 100;

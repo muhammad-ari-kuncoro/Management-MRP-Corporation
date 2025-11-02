@@ -70,7 +70,7 @@
                                 <a href="{{ route('purchase-order.index') }}" class="submenu-link">Purchase Orders</a>
                             </li>
                             <li class="submenu-item">
-                                <a href="component-alert.html" class="submenu-link">Alert</a>
+                                <a href="{{ route('bills-of-materials.index') }}" class="submenu-link">Bills Of Materials</a>
                             </li>
                         </ul>
                     </li>

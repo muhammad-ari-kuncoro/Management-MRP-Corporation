@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillsOfMaterialsController;
 use App\Http\Controllers\BranchCompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemsController;
@@ -78,6 +79,10 @@ Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
     Route::post('/store',[SupplierController::class, 'store'])->name('store');
     Route::get('/supplier-company/edit/{id}',[SupplierController::class, 'edit'])->name('edit');
     Route::put('/update-supplier/{id}',[SupplierController::class, 'update'])->name('update');
+});
+
+Route::prefix('bills-of-materials')->name('bills-of-materials.')->group(function(){
+    Route::get('/',[BillsOfMaterialsController::class, 'index'])->name('index');
 });
 
 
