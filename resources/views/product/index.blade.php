@@ -10,8 +10,8 @@
 
                     <!-- Judul dan Tombol Tambah Data -->
                     <div class="d-flex align-items-center mb-3 mb-md-0">
-                        <h4 class="mb-0 me-4">Data Master Barang</h4>
-                        <a href="{{ route('items.create') }}" class="btn btn-primary icon icon-left">
+                        <h4 class="mb-0 me-4">Data Master Produk</h4>
+                        <a href="{{ route('product.create') }}" class="btn btn-primary icon icon-left">
                             <i class="bi bi-plus-circle-fill"></i>
                             Tambah Data
                         </a>
@@ -42,62 +42,47 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover" id="myTable15">
+                    <table class="table table-hover" id="myTable10">
                         <thead>
                             <tr>
                                         <th>No</th>
-                                        <th>Kode Brg</th>
-                                        <th>Nama Brg</th>
-                                        <th>Spesification Brg</th>
-                                        <th>Type Brg</th>
-                                        <th>Harga Jual</th>
-                                        <th>Stock Awal</th>
-                                        <th>HPP</th>
-                                        <th>Kategory</th>
-                                        <th>Status Brg</th>
-                                        <th>Cabang Supplier</th>
-                                        <th>Minim Stock</th>
-                                        <th>Konversion Items</th>
-                                        <th>Berat Items</th>
-                                        <th>Deskripsi</th>
+                                        <th>Kode Produk</th>
+                                        <th>Nama Produk</th>
+                                        <th>Spesifikasi Produk</th>
+                                        <th>Type Produk</th>
+                                        <th>Unit Produk</th>
+                                        <th>Quantity Produk</th>
+                                        <th>Tipe Quantity Produk</th>
+                                        <th>Deskripsi Produk</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($product_items as $data )
                             <!-- Contoh Data Statis -->
-                            @foreach ($item_all as $data )
-
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $data->kd_item }}</td>
-                                <td>{{ $data->name_item }}</td>
-                                <td>{{ $data->spesification }}</td>
+                                <td>{{ $data->product_code }}</td>
+                                <td>{{ $data->product_name }}</td>
+                                <td>{{ $data->spesification_product }}</td>
                                 <td>{{ $data->type }}</td>
-                                <td>{{ $data->price_item }}</td>
-                                <td>{{ $data->qty }}</td>
-                                <td>{{ $data->weight_item }}</td>
-                                <td>{{ $data->hpp }}</td>
-                                <td>{{ $data->category }}</td>
-                                <td>
-                                    <span class="badge {{ $data->status_item == 'Active' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $data->status_item }}
-                                    </span>
-                                </td>
-                                <td>{{ $data->branchCompany->name_branch_company ?? '-' }}</td>
-                                <td>{{ $data->minim_stok }}</td>
-                                <td>{{ $data->konversion_items_carbon }}</td>
-                                <td>{{ $data->description }}</td>
+                                <td>{{ $data->unit }}</td>
+                                <td>{{ $data->qty_product }}</td>
+                                <td>{{ $data->type_qty }}</td>
+                                <td>{{ $data->description_product }}</td>
+                                <td>{{ $data->status }}</td>
                                 <td>
                                     <div class="d-flex gap-2">
                                         <!-- Tombol Edit -->
-                                        <a href="{{route('items.edit',$data->id)}}" class="btn btn-sm btn-warning">
+                                        <a href="" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                     </div>
                                 </td>
-                            </tr>
-                            @endforeach
-
+                            </td>
+                        </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -115,9 +100,7 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    $('#myTable15').DataTable();
+    $('#myTable10').DataTable();
 });
-
 </script>
 @endpush
-

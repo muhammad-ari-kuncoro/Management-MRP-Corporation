@@ -219,7 +219,7 @@
 
                         </div>
                         <div class="modal-footer d-flex justify-content-end gap-2">
-                            <a href="{{route('branch-company.index')}}" class="btn btn-light-secondary">
+                            <a href="{{route('items.index')}}" class="btn btn-light-secondary">
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Tutup</span>
                             </a>

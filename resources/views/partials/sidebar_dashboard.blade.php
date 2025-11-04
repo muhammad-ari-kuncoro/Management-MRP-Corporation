@@ -53,7 +53,12 @@
 
 
                             <li class="submenu-item {{ Request::routeIs('items.index') ? 'active' : '' }}">
-                                <a href="{{ route('items.index') }}" class="submenu-link">Master Data Barang</a>
+                                <a href="{{ route('items.index') }}" class="submenu-link">Master Data Barang Item</a>
+                            </li>
+
+                            <li class="submenu-item {{ Request::routeIs('product.index') ? 'active' : '' }}">
+                                <a href="{{ route('product.index') }}" class="submenu-link">Master Data Product
+                                </a>
                             </li>
 
                         </ul>

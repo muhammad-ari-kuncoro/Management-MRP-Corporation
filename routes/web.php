@@ -5,6 +5,7 @@ use App\Http\Controllers\BranchCompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseOrderDetailController;
 use App\Http\Controllers\SupplierController;
@@ -83,6 +84,12 @@ Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
 
 Route::prefix('bills-of-materials')->name('bills-of-materials.')->group(function(){
     Route::get('/',[BillsOfMaterialsController::class, 'index'])->name('index');
+});
+
+Route::prefix('product')->name('product.')->group(function(){
+    Route::get('/',[ProductController::class, 'index'])->name('index');
+    Route::get('/create',[ProductController::class, 'create'])->name('create');
+    Route::post('/store',[ProductController::class, 'store'])->name('store');
 });
 
 
