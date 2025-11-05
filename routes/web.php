@@ -84,6 +84,7 @@ Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
 
 Route::prefix('bills-of-materials')->name('bills-of-materials.')->group(function(){
     Route::get('/',[BillsOfMaterialsController::class, 'index'])->name('index');
+    Route::get('/create',[BillsOfMaterialsController::class, 'create'])->name('create');
 });
 
 Route::prefix('product')->name('product.')->group(function(){

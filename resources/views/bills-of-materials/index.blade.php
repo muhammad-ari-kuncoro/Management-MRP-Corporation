@@ -42,18 +42,16 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover" id="table1">
+                    <table class="table table-hover" id="myTable6">
                         <thead>
                             <tr>
-                                <thead>
-                                    <tr>
                                         <th>No</th>
                                         <th>Kode BOM</th>
                                         <th>Nama Kebutuhan Product</th>
                                         <th>Revisi</th>
                                         <th>Nama Items</th>
                                         <th>Status</th>
-                                        <th style="width: 150px;">Aksi</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
 
@@ -61,7 +59,6 @@
                         </thead>
                         <tbody>
                             <!-- Contoh Data Statis -->
-
                             <tr>
                                 <td>asdasdasd</td>
                                 <td>asdasdasd</td>
@@ -91,3 +88,16 @@
 </div>
 </div>
 @endsection
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+@endpush
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#myTable6').DataTable();
+});
+
+</script>
+@endpush
+

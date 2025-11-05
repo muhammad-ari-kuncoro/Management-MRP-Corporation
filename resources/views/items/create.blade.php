@@ -51,7 +51,7 @@
                             <div class="col-md-6">
                                 <label>Harga Jual (Rp)</label>
                                 <input type="number" name="price_item" id="price_item" class="form-control"
-                                    placeholder="Cth: 150.000 DSB" min="number">
+                                    placeholder="Cth: 150.000 DSB" min="1">
                             </div>
                             <div class="col-md-6">
                                 <label>Stok Awal</label>

@@ -23,6 +23,8 @@ class BillsOfMaterialsController extends Controller
     public function create()
     {
         //
+        $data['judul'] = 'Create Bills of materials Page';
+        return view('bills-of-materials.create',$data);
     }
 
     /**
