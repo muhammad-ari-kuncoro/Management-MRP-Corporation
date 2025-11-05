@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('tb_bills_of_materials', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->foreign("user_id")->references("id")->on("users");
+            $table->string('date_bom')->nullable();
+            $table->string('code_bom')->nullable();
+            $table->string('revision')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

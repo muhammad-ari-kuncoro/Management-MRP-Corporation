@@ -69,16 +69,16 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $data->po_date }}</td>
-                                <td>{{ $data->supplier->name_suppliers }}</td>
-                                <td>{{ $data->estimation_delivery_date }}</td>
+                                <td>{{ optional($data->supplier)->name_suppliers ?? 'No Supplier' }}</td>
+                                <td>{{ optional($data)->estimation_delivery_date ?? 'No Estimation' }}</td>
                                 <td>
                                     {{ !empty($data->note) ? $data->note : 'Tidak ada catatan' }}
                                 </td>
 
-                                <td>{{ $data->supplier->method_payment }}</td>
-                                <td>{{ $data->status }}</td>
-                                <td>{{ $data->currency }}</td>
-                                <td>{{ $data->currency_rate }}</td>
+                                <td>{{ optional($data->supplier)->method_payment ?? 'No Method Payment' }}</td>
+                                <td>{{ optional($data)->status ?? 'no Status' }}</td>
+                                <td>{{ optional($data)->currency ?? 'No Currency' }}</td>
+                                <td>{{ optional($data)->currency_rate ?? 'No Currency Rate' }}</td>
                                 <td>
                                     @if ($data->attachment)
                                     <img src="{{ asset('storage/' . $data->attachment) }}" alt="Attachment" width="60"
@@ -104,7 +104,7 @@
                                 </td>
 
 
-                                <td>{{ $data->transportation_fee }}</td>
+                                <td>{{ optional($data)->transportation_fee ?? 'No transportation_fee' }}</td>
                                 <td>
                                     <div class="d-flex gap-2">
                                         <!-- Tombol Edit -->

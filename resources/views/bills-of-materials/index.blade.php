@@ -11,7 +11,7 @@
                     <!-- Judul dan Tombol Tambah Data -->
                     <div class="d-flex align-items-center mb-3 mb-md-0">
                         <h4 class="mb-0 me-4">Data Master Barang</h4>
-                        <a href="" class="btn btn-primary icon icon-left">
+                        <a href="{{ route('bills-of-materials.create') }}" class="btn btn-primary icon icon-left">
                             <i class="bi bi-plus-circle-fill"></i>
                             Tambah Data
                         </a>
