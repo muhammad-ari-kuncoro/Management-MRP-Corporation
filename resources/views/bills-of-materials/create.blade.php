@@ -12,7 +12,7 @@
 
     <div class="card-body">
         {{-- ================= HEADER BOM ================= --}}
-        <form id="bomForm" action="" method="POST">
+        <form id="bomForm" action="{{ route('bills-of-materials.store')}}" method="POST">
             @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -31,7 +31,7 @@
                         @error('revision') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label>Status</label>
                         <select name="status" class="form-select" required>
                             <option value="">-- Pilih Status --</option>
@@ -40,7 +40,7 @@
                             <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
                         </select>
                         @error('status') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
+                    </div> --}}
 
                 </div>
 
@@ -77,38 +77,7 @@
         <hr>
         <h6 class="fw-bold mb-3">Detail Material</h6>
 
-        <form id="bomDetailForm" action="" method="POST">
-            @csrf
-            <input type="hidden" name="bom_id" value="{{ $bom->id ?? '' }}">
-
-            <div class="row align-items-end">
-                <div class="col-md-4">
-                    <label>Nama Item</label>
-                    <select name="item_id" class="form-select" required>
-                        <option value="">-- Pilih Item --</option>
-                        @foreach($data_items ?? [] as $item)
-                        <option value="{{ $item->id }}">{{ $item->name_item }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label>Quantity (Qty)</label>
-                    <input type="number" name="plan_qty" class="form-control" min="1" value="1">
-                </div>
-
-                <div class="col-md-3">
-                    <label>Catatan</label>
-                    <input type="text" name="notes" class="form-control" placeholder="Catatan opsional">
-                </div>
-
-                <div class="col-md-2 d-grid">
-                    <button type="submit" class="btn btn-primary mt-2">
-                        <i class="bi bi-plus-circle"></i> Tambah
-                    </button>
-                </div>
-            </div>
-        </form>
+        @include('bills-of-materials.create_detail')
 
         {{-- ================= TABEL ITEM ================= --}}
         <div class="table-responsive mt-4">
@@ -124,15 +93,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($data_boms ?? [] as $detail)
+                    @forelse ($detail_BOM ?? [] as $detail)
                     <tr>
                         <td>{{ $detail->items->kd_item ?? '-' }}</td>
                         <td>{{ $detail->items->name_item ?? '-' }}</td>
                         <td>{{ $detail->items->spesification ?? '-' }}</td>
-                        <td class="text-center">{{ $detail->plan_qty }}</td>
+                        <td>{{ $detail->plan_qty }}</td>
                         <td>{{ $detail->notes ?: '-' }}</td>
                         <td>
-                            <form action="{{ route('bom-detail.destroy', $detail->id) }}" method="POST" onsubmit="return confirm('Hapus item ini?')">
+                            <form action="{{ route('bills-of-materials.bills-of-materials.destroy', $detail->id) }}" method="POST" onsubmit="return confirm('Hapus item ini?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">

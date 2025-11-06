@@ -49,6 +49,7 @@ class PurchaseOrderDetailController extends Controller
     return view('purchase-order-detail.index', $data);
 }
 
+    // Tang ini dipakai function untuk form detail purchase order
  public function create(Request $request)
 {
       $request->validate([

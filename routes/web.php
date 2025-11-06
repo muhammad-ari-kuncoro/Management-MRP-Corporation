@@ -82,10 +82,14 @@ Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
     Route::put('/update-supplier/{id}',[SupplierController::class, 'update'])->name('update');
 });
 
-Route::prefix('bills-of-materials')->name('bills-of-materials.')->group(function(){
-    Route::get('/',[BillsOfMaterialsController::class, 'index'])->name('index');
-    Route::get('/create',[BillsOfMaterialsController::class, 'create'])->name('create');
-});
+Route::prefix('bills-of-materials')->name('bills-of-materials.')->middleware(['auth'])->group(function () {
+        Route::get('/', [BillsOfMaterialsController::class, 'index'])->name('index');
+        Route::get('/create', [BillsOfMaterialsController::class, 'create'])->name('create');
+        Route::post('/store', [BillsOfMaterialsController::class, 'store'])->name('store');
+        Route::post('/store-detail', [BillsOfMaterialsController::class, 'storeDetailBOM'])->name('store-detail');
+        Route::delete('/destroy/{id}', [BillsOfMaterialsController::class, 'destroy'])->name('bills-of-materials.destroy');
+    });
+
 
 Route::prefix('product')->name('product.')->group(function(){
     Route::get('/',[ProductController::class, 'index'])->name('index');

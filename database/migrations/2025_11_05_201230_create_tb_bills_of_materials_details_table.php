@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigInteger('bom_id')->unsigned()->nullable();
             $table->foreign("item_id")->references("id")->on("tb_items");
             $table->bigInteger('item_id')->unsigned()->nullable();
-            $table->integer('plan_qty');
-            $table->string('notes');
+            $table->integer('plan_qty')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
     }

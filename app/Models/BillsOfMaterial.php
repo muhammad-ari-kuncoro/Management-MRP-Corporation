@@ -11,6 +11,7 @@ class BillsOfMaterial extends Model
     protected $table = 'tb_bills_of_materials';
 
     protected $fillable = [
+        'user_id',
         'date_bom',
         'code_bom',
         'revision',

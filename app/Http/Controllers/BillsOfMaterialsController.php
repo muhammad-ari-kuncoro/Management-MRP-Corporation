@@ -7,6 +7,7 @@ use App\Models\BillsOfMaterialsDetails;
 use App\Models\Items;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BillsOfMaterialsController extends Controller
 {
@@ -35,7 +36,7 @@ class BillsOfMaterialsController extends Controller
         if (!$bom_draft) {
         $bom_draft = BillsOfMaterial::create([
             'user_id' => Auth::id(),
-            'code_bom' => 'PO-' . strtoupper(uniqid()),
+            'code_bom' => 'BOM-' . strtoupper(uniqid()),
             'date_bom' => now(),
             'revision' => 'Revisi 1',
             'status' => 'draft',
@@ -46,7 +47,7 @@ class BillsOfMaterialsController extends Controller
         $data['data_items'] = Items::all();
 
         // Ambil detail barang untuk PO draft
-    $data['detail_po'] = BillsOfMaterialsDetails::with('items')
+    $data['detail_BOM'] = BillsOfMaterialsDetails::with('items')
         ->where('bom_id', $bom_draft->id)
         ->get();
 
@@ -60,12 +61,107 @@ class BillsOfMaterialsController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
+{
+    // 🔹 Validasi input wajib
+    $request->validate([
+        'date_bom'   => 'required|date',
+        'revision'   => 'nullable|string|max:255',
+    ]);
 
-    public function storeDetailBOM (Request $request)
+    try {
+        // 🔹 Pastikan user sudah login
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login untuk membuat BOM!');
+        }
+
+        // 🔹 Ambil draft BOM milik user yang sedang aktif
+        $bomDraft = BillsOfMaterial::where('user_id', Auth::id())
+            ->where('status', 'draft')
+            ->first();
+
+        // 🔹 Jika belum ada draft, buat baru otomatis
+        if (!$bomDraft) {
+            $bomDraft = BillsOfMaterial::create([
+                'user_id'   => Auth::id(),
+                'code_bom'  => $this->generateBOMNumber(),
+                'date_bom'  => now(),
+                'revision'  => 'Revisi 1',
+                'status'    => 'draft',
+            ]);
+        }
+
+        // 🔹 Pastikan ada detail BOM (barang/material)
+        $hasDetails = BillsOfMaterialsDetails::where('bom_id', $bomDraft->id)->exists();
+        if (!$hasDetails) {
+            return redirect()->back()->with('error', 'Harap tambahkan minimal 1 item sebelum menyimpan!');
+        }
+
+        // 🔹 Update data draft ke status Pending
+        $bomDraft->update([
+            'date_bom'  => $request->date_bom,
+            'revision'  => $request->revision ?? 'Revisi 1',
+            'code_bom'  => $this->generateBOMNumber(),
+            'status'    => 'Pending',
+        ]);
+
+        // 🔹 Redirect ke index dengan pesan sukses
+        return redirect()
+            ->route('bills-of-materials.index')
+            ->with([
+                'success' => 'Bills of Material berhasil disimpan!',
+                'scrollTo' => 'step'
+            ]);
+
+    } catch (\Throwable $th) {
+        return redirect()
+            ->back()
+            ->with([
+                'failed' => 'Terjadi kesalahan: ' . $th->getMessage(),
+                'scrollTo' => 'step'
+            ]);
+    }
+}
+
+    public function storeDetailBOM(Request $request)
     {
+
+    //
+        $request->validate([
+            'date_bom' => 'nullable',
+            'revision' => 'nullable',
+            'status' => 'draft',
+
+        ]);
+
+        try {
+    $billsOfMaterial = BillsOfMaterial::where('user_id', Auth::id())
+        ->where('status', 'draft')
+        ->latest()
+        ->first();
+
+        if (!$billsOfMaterial) {
+            $billsOfMaterial = BillsOfMaterial::create([
+
+            'code_bom'      =>  'BOM-' . now()->format('Ymd'),
+            'user_id'       =>  Auth::id(),
+            'date_bom'      =>  now(),
+            'revision'      => 'NO REVISION',
+            'status'        => 'draft'
+        ]);
+        }
+        $item = Items::findOrFail($request->item_id);
+
+        BillsOfMaterialsDetails::create([
+            'bom_id'        => $billsOfMaterial->id,
+            'item_id'       => $item->id,
+            'plan_qty'      => $request->plan_qty,
+            'notes'         => $request->notes,
+        ]);
+        return redirect()->back()->with(['success' => 'Update Sukses!', 'scrollTo' => 'step']);
+        } catch (\Throwable $th) {
+            //throw $th;
+        return redirect()->back()->with(['failed'=> $th->getMessage(), 'scrollTo' => 'step']);
+        }
 
     }
 
@@ -96,8 +192,49 @@ class BillsOfMaterialsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BillsOfMaterial $billsOfMaterial)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $detail = BillsOfMaterialsDetails::findOrFail($id);
+
+            // Cek status PO
+            $billsOfMaterial = BillsOfMaterial::findOrFail($detail->bom_id);
+            if ($billsOfMaterial->status !== 'draft') {
+                return redirect()->back()
+                    ->with('error', 'Bills Of Materials sudah diajukan, tidak dapat menghapus item.');
+            }
+            $detail->delete();
+            DB::commit();
+            return redirect()->back()
+                ->with('success', 'Item berhasil dihapus dari Bills Of Materials.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus item: ' . $e->getMessage());
+        }
+    }
+
+
+     private function generateBOMNumber()
+    {
+        $date = date('ym'); // Format: YYMM (contoh: 2510 untuk Oktober 2025)
+
+        // Ambil PO terakhir dengan prefix bulan/tahun yang sama
+        $lastBOM = BillsOfMaterial::where('code_bom', 'LIKE', "TGR-BOM/ITM/{$date}/%")
+            ->orderBy('code_bom', 'desc')
+            ->first();
+
+        if ($lastBOM) {
+            // Ambil 4 digit terakhir dan tambah 1
+            $lastNumber = (int) substr($lastBOM->code_bom, -4);
+            $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            // Mulai dari 0001 jika belum ada PO di bulan ini
+            $newNumber = '0001';
+        }
+
+        return "TGR-BOM/ITM/{$date}/{$newNumber}";
     }
 }

@@ -41,6 +41,7 @@ class PurchaseOrderController extends Controller
     /**
      * Store a newly created purchase order
      */
+    // Ini Yang DI pakai Untuk Form Purchase Orders
     public function store(Request $request)
     {
     $request->validate([
