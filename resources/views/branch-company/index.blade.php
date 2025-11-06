@@ -55,6 +55,7 @@
                         </thead>
                         <tbody>
                             @foreach ($data_branch as $data)
+                              @if (is_null($data->deleted_at))
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$data->name_branch_company}}</td>
@@ -83,7 +84,7 @@
                                         <!-- Tombol Edit -->
 
                                         <!-- Tombol Hapus -->
-                                        <form action="#" method="POST"
+                                        <form action="{{route('branch-company.destroy',$data->id)}}" method="POST"
                                             onsubmit="return confirm('Yakin hapus data ini?')">
                                             @csrf
                                             @method('DELETE')
@@ -94,6 +95,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>

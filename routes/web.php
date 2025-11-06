@@ -30,10 +30,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index']);
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
 
-Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
+Route::get('/dashboard',[DashboardController::class,'index'])->middleware(['auth'])->name('dashboard');
 
 
-Route::prefix('items')->name('items.')->group(function(){
+Route::prefix('items')->name('items.')->middleware(['auth'])->group(function(){
 
     Route::get('/',[ItemsController::class, 'index'])->name('index');
     Route::get('/create',[ItemsController::class, 'create'])->name('create');
@@ -43,7 +43,7 @@ Route::prefix('items')->name('items.')->group(function(){
 });
 
 // Purchase Order Routes
-Route::prefix('purchase-order')->middleware(['auth'])->group(function () {
+Route::prefix('purchase-order')->middleware(['auth'])->middleware(['auth'])->group(function () {
     Route::get('/', [PurchaseOrderController::class, 'index'])->name('purchase-order.index');
     Route::get('/create', [PurchaseOrderController::class, 'create'])->name('purchase-order.create');
     Route::post('/store', [PurchaseOrderController::class, 'store'])->name('purchase-order.store');
@@ -54,7 +54,7 @@ Route::prefix('purchase-order')->middleware(['auth'])->group(function () {
 });
 
 // Purchase Order Detail Routes
-Route::prefix('purchase-order-detail')->middleware(['auth'])->group(function () {
+Route::prefix('purchase-order-detail')->middleware(['auth'])->middleware(['auth'])->group(function () {
     Route::get('/', [PurchaseOrderDetailController::class, 'index'])->name('purchase-order-detail.index');
     Route::post('/create', [PurchaseOrderDetailController::class, 'create'])->name('purchase-order-detail.create');
     Route::put('/update/{id}', [PurchaseOrderDetailController::class, 'update'])->name('purchase-order-detail.update');
@@ -66,15 +66,16 @@ Route::prefix('purchase-order-detail')->middleware(['auth'])->group(function () 
 });
 
 
-Route::prefix('branch-company')->name('branch-company.')->group(function(){
+Route::prefix('branch-company')->name('branch-company.')->middleware(['auth'])->group(function(){
     Route::get('/',[BranchCompanyController::class, 'index'])->name('index');
     Route::post('/create',[BranchCompanyController::class, 'store'])->name('store');
     Route::get('/branch-company/edit/{id}',[BranchCompanyController::class, 'edit'])->name('edit');
     Route::put('/update-branch/{id}',[BranchCompanyController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}',[BranchCompanyController::class, 'destroyData'])->name('destroy');
 });
 
 
-Route::prefix('supplier-company')->name('supplier-company.')->group(function(){
+Route::prefix('supplier-company')->name('supplier-company.')->middleware(['auth'])->group(function(){
     Route::get('/',[SupplierController::class, 'index'])->name('index');
     Route::get('/create',[SupplierController::class, 'create'])->name('create');
     Route::post('/store',[SupplierController::class, 'store'])->name('store');

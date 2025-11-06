@@ -16,7 +16,7 @@ class BranchCompanyController extends Controller
     {
         //
         $data['judul'] = 'Branch Company Page';
-        $data['data_branch'] = BranchCompany::all();
+        $data['data_branch'] = BranchCompany::withTrashed()->get();
         return view('branch-company.index',$data);
     }
 
@@ -136,14 +136,20 @@ class BranchCompanyController extends Controller
     return redirect()->route('branch-company.index')
                      ->with('success', 'Data cabang perusahaan berhasil diperbarui.');
 }
-
+        public function destroyData($id)
+        {
+            $branch = BranchCompany::findOrFail($id);
+            $branch->delete(); // ini akan mengisi kolom deleted_at
+            return redirect()->route('branch-company.index')
+        ->with('success', 'Data cabang berhasil dihapus (soft delete).');
+        }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(BranchCompany $branchCompany)
     {
- // Hapus file logo kalau ada
+   // Hapus file logo kalau ada
     if ($branchCompany->logo) {
         // Coba hapus dari storage/public
         $storagePath = str_replace('storage/', '', $branchCompany->logo);
@@ -159,9 +165,10 @@ class BranchCompanyController extends Controller
         }
     }
 
-    // Hapus data dari database
-    $branchCompany->delete();
+    // Soft delete data dari database
+    $branchCompany->delete(); // ini nggak benar-benar hapus karena pakai SoftDeletes
 
-    return redirect()->route('branch-company.index')->with('success', 'Data cabang berhasil dihapus.');
+    return redirect()->route('branch-company.index')
+        ->with('success', 'Data cabang berhasil dihapus (soft delete).');
     }
 }

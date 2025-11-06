@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('phone_number');
             $table->timestamps();
+            $table->softDeletes(); // ini otomatis bikin kolom deleted_at
         });
     }
 
@@ -28,6 +29,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_branch_company_items');
+       Schema::table('tb_branch_company_items', function (Blueprint $table) {
+        $table->dropSoftDeletes();
+    });
     }
 };
