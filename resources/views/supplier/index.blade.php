@@ -49,7 +49,7 @@
                         </thead>
                         <tbody>
                             @foreach ($data_supplier as $data )
-
+                            @if (is_null($data->deleted_at))
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $data->name_suppliers }}</td>
@@ -67,10 +67,18 @@
                                         </a>
                                         <!-- Tombol Edit -->
                                         <!-- Tombol Hapus -->
-
+                                        <form action="{{route('supplier-company.destroy',$data->id)}}" method="POST"
+                                            onsubmit="return confirm('Yakin hapus data ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
                                 </div>
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                     </table>

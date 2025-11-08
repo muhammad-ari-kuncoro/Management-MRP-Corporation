@@ -248,8 +248,30 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Supplier $supplier)
+    public function destroy($id)
     {
-        //
+            try {
+            // 1. Cari data supplier
+            $supplier = Supplier::findOrFail($id);
+
+            // 2. Hapus file gambar (jika ada)
+            if ($supplier->scan_npwp && file_exists(public_path($supplier->scan_npwp))) {
+                unlink(public_path($supplier->scan_npwp));
+            }
+
+            if ($supplier->scan_siup && file_exists(public_path($supplier->scan_siup))) {
+                unlink(public_path($supplier->scan_siup));
+            }
+            // 3. Soft delete data
+            $supplier->delete();
+            // 4. Redirect ke halaman index
+            return redirect()->route('supplier-company.index')
+                ->with('success', 'Data Supplier berhasil dihapus (soft delete) dan file terkait sudah dihapus.');
+
+        } catch (\Exception $e) {
+            // 5. Tangani jika error
+            return redirect()->route('supplier-company.index')
+                ->with('error', 'Gagal menghapus data Supplier. Mohon coba lagi.');
+        }
     }
 }

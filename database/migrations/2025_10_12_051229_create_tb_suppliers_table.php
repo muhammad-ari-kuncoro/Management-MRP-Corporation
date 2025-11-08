@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('scan_npwp')->nullable();
             $table->string('scan_siup')->nullable();
             $table->timestamps();
+            $table->softDeletes(); // ini otomatis bikin kolom deleted_at
         });
     }
 
@@ -50,6 +51,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_suppliers');
+        Schema::table('tb_suppliers', function (Blueprint $table) {
+        $table->dropSoftDeletes();
+    });
     }
 };

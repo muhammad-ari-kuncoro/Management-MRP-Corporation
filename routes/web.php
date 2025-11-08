@@ -81,6 +81,7 @@ Route::prefix('supplier-company')->name('supplier-company.')->middleware(['auth'
     Route::post('/store',[SupplierController::class, 'store'])->name('store');
     Route::get('/supplier-company/edit/{id}',[SupplierController::class, 'edit'])->name('edit');
     Route::put('/update-supplier/{id}',[SupplierController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}',[SupplierController::class, 'destroy'])->name('destroy');
 });
 
 Route::prefix('bills-of-materials')->name('bills-of-materials.')->middleware(['auth'])->group(function () {

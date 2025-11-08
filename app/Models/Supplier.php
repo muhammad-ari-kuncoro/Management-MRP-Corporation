@@ -10,6 +10,7 @@ class Supplier extends Model
     use HasFactory;
     protected $table = 'tb_suppliers';
     protected $guarded = ['id'];
+    protected $dates = ['deleted_at'];
 
     public function branchCompany()
     {
