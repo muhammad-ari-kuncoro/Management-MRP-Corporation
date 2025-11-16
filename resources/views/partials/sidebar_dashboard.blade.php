@@ -33,7 +33,7 @@
                     </li>
 
                     {{-- Master --}}
-                    <li class="sidebar-item has-sub {{ Request::is('items*') || Request::is('branch-company') || Request::is('supplier-company')  ? 'active' : '' }}">
+                    <li class="sidebar-item has-sub {{ Request::is('items*') || Request::is('branch-company') || Request::is('supplier-company') || Request::is('product')  ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
                             <i class="bi bi-stack"></i>
                             <span>Master</span>
@@ -64,8 +64,27 @@
                         </ul>
                     </li>
 
+
+                    {{-- Planning --}}
+                    <li class="sidebar-item has-sub {{ Request::is('work-orders*') || Request::is('bills-of-materials') || Request::is('supplier-company')  ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link">
+                            <i class="bi bi-stack"></i>
+                            <span>Planning</span>
+                        </a>
+                        <ul class="submenu">
+                           <li class="submenu-item">
+                                <a href="{{route('work-orders.index')}}" class="submenu-link">Work Of Orders</a>
+                            </li>
+                        </ul>
+                        <ul class="submenu">
+                           <li class="submenu-item">
+                                <a href="{{ route('bills-of-materials.index') }}" class="submenu-link">Bills Of Materials</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     {{-- Permintaan / Purchase Order --}}
-                    <li class="sidebar-item has-sub {{ Request::is('purchase*') ? 'active' : '' }}">
+                    <li class="sidebar-item has-sub {{ Request::is('purchase-order*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
                             <i class="bi bi-receipt"></i>
                             <span>Permintaan</span>
@@ -73,9 +92,6 @@
                         <ul class="submenu">
                             <li class="submenu-item ">
                                 <a href="{{ route('purchase-order.index') }}" class="submenu-link">Purchase Orders</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="{{ route('bills-of-materials.index') }}" class="submenu-link">Bills Of Materials</a>
                             </li>
                         </ul>
                     </li>

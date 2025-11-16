@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseOrderDetailController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WorkOrdersController;
 use App\Models\PurchaseOrder;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,10 @@ Route::prefix('product')->name('product.')->group(function(){
     Route::get('/',[ProductController::class, 'index'])->name('index');
     Route::get('/create',[ProductController::class, 'create'])->name('create');
     Route::post('/store',[ProductController::class, 'store'])->name('store');
+});
+
+Route::prefix('work-orders')->name('work-orders.')->group(function(){
+    Route::get('/',[WorkOrdersController::class, 'index'])->name('index');
 });
 
 
