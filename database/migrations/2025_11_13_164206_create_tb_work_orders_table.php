@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('tb_work_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('production_plan_id');
-            $table->string('operator');
-            $table->string('machine_used');
-            $table->string('status');
-            $table->string('actual_start_date');
-            $table->string('actual_start_time');
-            $table->string('actual_end_date');
-            $table->string('actual_end_time');
+            $table->string('work_order_code');
+            $table->bigInteger('product_id')->unsigned()->nullable();
+            $table->foreign("product_id")->references("id")->on("tb_product");
+            $table->bigInteger('bom_id')->unsigned()->nullable();
+            $table->foreign("bom_id")->references("id")->on("tb_bills_of_materials");
+            $table->string('no_reference');
+            $table->integer('qty_ordered');
+            $table->integer('qty_completed');
+            $table->string('delivery_date_product');
             $table->timestamps();
         });
     }

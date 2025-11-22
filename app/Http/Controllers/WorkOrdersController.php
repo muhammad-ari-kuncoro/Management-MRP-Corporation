@@ -13,7 +13,7 @@ class WorkOrdersController extends Controller
     public function index()
     {
         //
-        $data['judul'] = 'Work Oders Page';
+        $data['judul'] = 'Work Orders Page';
         return view('work-orders.index',$data);
     }
 
@@ -64,4 +64,17 @@ class WorkOrdersController extends Controller
     {
         //
     }
+
+    public function generateCode()
+{
+    $last = WorkOrders::orderBy('id', 'desc')->first();
+    $year = date('Y');
+
+    $next = $last ? ((int) substr($last->code, -4)) + 1 : 1;
+    $padded = str_pad($next, 4, '0', STR_PAD_LEFT);
+
+    $code = "PP-$year-$padded";
+
+    return response()->json(['code' => $code]);
+}
 }

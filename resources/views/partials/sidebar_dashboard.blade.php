@@ -66,19 +66,17 @@
 
 
                     {{-- Planning --}}
-                    <li class="sidebar-item has-sub {{ Request::is('work-orders*') || Request::is('bills-of-materials') || Request::is('supplier-company')  ? 'active' : '' }}">
+                    <li class="sidebar-item has-sub {{ Request::is('work-orders*') || Request::is('bills-of-materials*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
                             <i class="bi bi-stack"></i>
                             <span>Planning</span>
                         </a>
                         <ul class="submenu">
-                           <li class="submenu-item">
-                                <a href="{{route('work-orders.index')}}" class="submenu-link">Work Of Orders</a>
-                            </li>
-                        </ul>
-                        <ul class="submenu">
-                           <li class="submenu-item">
+                           <li class="submenu-item {{ Request::routeIs('bills-of-materials.index') ? 'active' : '' }}">
                                 <a href="{{ route('bills-of-materials.index') }}" class="submenu-link">Bills Of Materials</a>
+                            </li>
+                             <li class="submenu-item {{ Request::routeIs('work-orders.index') ? 'active' : '' }}">
+                                <a href="{{route('work-orders.index')}}" class="submenu-link">Work Of Orders</a>
                             </li>
                         </ul>
                     </li>

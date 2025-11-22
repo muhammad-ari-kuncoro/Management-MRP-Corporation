@@ -22,7 +22,7 @@
 
                     <!-- Input Search (ditempatkan di kanan) -->
                     <form action="" method="GET" class="d-flex" role="search">
-                        <div class="input-group">
+                        <div class="input-group">`
                             <input type="text" name="search" class="form-control" placeholder="Cari barang..." value="">
                             <button class="btn btn-outline-secondary" type="submit">
                                 <i class="bi bi-search"></i>
@@ -43,12 +43,16 @@
                     <table class="table table-hover" id="myTable7">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>No Permintaan Pekerjaan</th>
-                                <th>Nama Produk</th>
-                                <th>No BOM</th>
-                                <th>Total Quantity Persiapan</th>
-                                <th>Status</th>
+                                <th>No </th>
+                                <th>Nomor Permintaan Pekerjaan </th>
+                                <th>Nama Produk </th>
+                                <th>Status Produksi </th>
+                                <th>Nomor Kode BOM </th>
+                                <th>Total Quantity Kebutuhan </th>
+                                <th>Total Quantity Penyelesaian </th>
+                                <th>Tanggal pengiriman Produk </th>
+                                <th>Nomor Refrensi (Opsional)</th>
+                                <th>Status </th>
                                 <th style="width: 150px;">Aksi</th>
                             </tr>
                         </thead>
@@ -57,6 +61,10 @@
                                 <td>01</td>
                                 <td>984398</td>
                                 <td>Sampo</td>
+                                <td>asjdoasdh</td>
+                                <td>asjdoasdh</td>
+                                <td>asjdoasdh</td>
+                                <td>asjdoasdh</td>
                                 <td>asjdoasdh</td>
                                 <td>jfaojaosdjdas</td>
                                 <td>dashdjashdadha</td>
@@ -107,25 +115,23 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="name_branch_company" class="form-label fw-semibold">Nama Cabang Perusahaan</label>
-                        <input id="name_branch_company" type="name_branch_company" name="name_branch_company"
-                            class="form-control" placeholder="Masukkan Nama cabang Perusahaan" required>
-                        @error('name_branch_company')
+                        <label for="production_plan_id" class="form-label fw-semibold">Production Plan Code</label>
+                        <input id="production_plan_id" type="production_plan_id" name="production_plan_id"
+                            class="form-control" placeholder="Masukkan Production Plan Code" required>
+                        @error('production_plan_id')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="address_branch_company" class="form-label fw-semibold">Alamat Cabang
-                            Perusahaan</label>
-
-                        <textarea id="address_branch_company" name="address_branch_company" class="form-control"
+                        <label for="operator" class="form-label fw-semibold"> Nama Operator </label>
+                        <textarea id="operator" name="operator" class="form-control"
                             rows="3" placeholder="Masukkan Alamat Cabang Perusahaan"
-                            required>{{ old('address_branch_company') }}</textarea>
+                            required>{{ old('operator') }}</textarea>
 
                         <small class="text-muted">Masukkan alamat lengkap termasuk jalan, kota, dan kode pos.</small>
 
-                        @error('address_branch_company')
+                        @error('operator')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
