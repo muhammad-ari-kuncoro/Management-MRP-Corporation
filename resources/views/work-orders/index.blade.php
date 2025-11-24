@@ -116,8 +116,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="production_plan_id" class="form-label fw-semibold">Production Plan Code</label>
-                        <input id="production_plan_id" type="production_plan_id" name="production_plan_id"
-                            class="form-control" placeholder="Masukkan Production Plan Code" required>
+                        <input id="production_plan_id" type="production_plan_id" name="production_plan_id" value="{{ $generate_code_work }}"
+                            class="form-control" placeholder="Masukkan Production Plan Code" disabled readonly>
                         @error('production_plan_id')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror

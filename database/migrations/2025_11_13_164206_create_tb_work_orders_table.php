@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('qty_ordered');
             $table->integer('qty_completed');
             $table->string('delivery_date_product');
+            $table->softDeletes(); // ini otomatis bikin kolom deleted_at
             $table->timestamps();
         });
     }
@@ -29,8 +30,10 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+     public function down(): void
     {
-        Schema::dropIfExists('tb_work_orders');
+       Schema::table('tb_work_orders', function (Blueprint $table) {
+        $table->dropSoftDeletes('deleted_at');
+    });
     }
 };

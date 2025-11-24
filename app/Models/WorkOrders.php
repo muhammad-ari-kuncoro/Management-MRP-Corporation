@@ -12,4 +12,7 @@ class WorkOrders extends Model
     protected $table = 'tb_work_orders';
     protected $guarded = ['id'];
     protected $dates = ['deleted_at'];
+
+
+
 }
