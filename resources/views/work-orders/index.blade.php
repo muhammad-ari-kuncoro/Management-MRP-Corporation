@@ -13,11 +13,13 @@
                     <div class="d-flex align-items-center mb-3 mb-md-0">
                         <h4 class="mb-0 me-4">Data Master Permintaan Pekerjaan</h4>
 
+                        <a href="{{route('work-orders.create')}}" class="btn btn-primary icon icon-left"><i
+                                class="bi bi-plus-circle-fill"></i>Tambah Data Permintaan Pekerjaan</a>
                         <!-- Button trigger for login form modal -->
-                        <button type="button" class="btn btn-primary icon icon-left" data-bs-toggle="modal"
+                        {{-- <button type="button" class="btn btn-primary icon icon-left" data-bs-toggle="modal"
                             data-bs-target="#inlineForm"> <i class="bi bi-plus-circle-fill"></i>
                             Tambah Data Permintaan Pekerjaan
-                        </button>
+                        </button> --}}
                     </div>
 
                     <!-- Input Search (ditempatkan di kanan) -->
@@ -40,34 +42,40 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover" id="myTable7">
+                    <table class="table table-hover" id="myTable8">
                         <thead>
                             <tr>
                                 <th>No </th>
                                 <th>Nomor Permintaan Pekerjaan </th>
-                                <th>Nama Produk </th>
-                                <th>Status Produksi </th>
-                                <th>Nomor Kode BOM </th>
-                                <th>Total Quantity Kebutuhan </th>
+                                <th>Nama Produk</th>
+                                <th>BOM</th>
+                                <th>Nomor Referensi</th>
+                                <th>Total Quantity Kebutuhan</th>
                                 <th>Total Quantity Penyelesaian </th>
                                 <th>Tanggal pengiriman Produk </th>
-                                <th>Nomor Refrensi (Opsional)</th>
-                                <th>Status </th>
                                 <th style="width: 150px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($data_WO as $data )
                             <tr>
-                                <td>01</td>
-                                <td>984398</td>
-                                <td>Sampo</td>
-                                <td>asjdoasdh</td>
-                                <td>asjdoasdh</td>
-                                <td>asjdoasdh</td>
-                                <td>asjdoasdh</td>
-                                <td>asjdoasdh</td>
-                                <td>jfaojaosdjdas</td>
-                                <td>dashdjashdadha</td>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$data->work_order_code}}</td>
+                                <td>
+                                    {{ $data->product->product_code ?? '-' }} |
+                                    {{ $data->product->product_name ?? '-' }}
+                                </td>
+                                <td>{{$data->billsOfMaterials->code_bom}} |
+                                     @if ($data->status == 'Pending')
+                                    <span class="badge bg-success text-dark"></span>
+                                    @else
+                                    <span class="badge bg-warning">{{$data->billsOfMaterials->status}}</span>
+                                    @endif
+                                     </td>
+                                <td>{{$data->no_reference}}</td>
+                                <td>{{$data->qty_ordered}}</td>
+                                <td>{{$data->qty_completed}}</td>
+                                <td>{{$data->delivery_date_product}}</td>
                                 <td>
 
                                     <div class="d-flex gap-2">
@@ -79,17 +87,18 @@
 
                                         <!-- Tombol Hapus -->
                                         {{-- <form action="{{route('branch-company.destroy',$data->id)}}" method="POST"
-                                            onsubmit="return confirm('Yakin hapus data ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                        onsubmit="return confirm('Yakin hapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                         </form> --}}
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
+                        @endforeach
                     </table>
 
                 </div>
@@ -99,7 +108,7 @@
 </div>
 </div>
 </div>
-
+{{--
 <!--login form Modal -->
 <div class="modal fade text-left" id="inlineForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
     aria-hidden="true">
@@ -116,99 +125,107 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="production_plan_id" class="form-label fw-semibold">Production Plan Code</label>
-                        <input id="production_plan_id" type="production_plan_id" name="production_plan_id" value="{{ $generate_code_work }}"
-                            class="form-control" placeholder="Masukkan Production Plan Code" disabled readonly>
-                        @error('production_plan_id')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="operator" class="form-label fw-semibold"> Nama Operator </label>
-                        <textarea id="operator" name="operator" class="form-control"
-                            rows="3" placeholder="Masukkan Alamat Cabang Perusahaan"
-                            required>{{ old('operator') }}</textarea>
-
-                        <small class="text-muted">Masukkan alamat lengkap termasuk jalan, kota, dan kode pos.</small>
-
-                        @error('operator')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email_branch_company" class="form-label fw-semibold">Email Cabang Perusahaan</label>
-                        <input id="email_branch_company" type="email" name="email_branch_company" class="form-control"
-                            placeholder="Masukkan email cabang" required>
-
-                        @error('email_branch_company')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="logo" class="form-label fw-semibold">Logo Cabang Perusahaan</label>
-                        <input id="logo" type="file" name="logo" class="form-control" accept="image/*">
-                        <small class="text-muted">Format: JPG, PNG, maksimal 2MB</small>
-                        @error('logo')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label for="status" class="form-label fw-semibold">Status Cabang</label>
-                        <select id="status" name="status" class="form-select" required>
-                            <option value="" disabled selected>Pilih Status</option>
-                            <option value="Active">Active</option>
-                            <option value="Non Active">Non Active</option>
-                        </select>
-                        @error('status')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label for="phone_number" class="form-label fw-semibold">No Telepon Cabang Perusahaan</label>
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1">+62</span>
-                            <input id="phone_number" type="text" name="phone_number" class="form-control"
-                                placeholder="Masukkan No telp Cabang Perusahaan" required>
-                        </div>
-                        @error('phone_number')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                </div>
-                <div class="modal-footer d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                        <i class="bx bx-x d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Tutup</span>
-                    </button>
-
-                    <button type="submit" class="btn btn-primary ms-1">
-
-                        <span class="d-none d-sm-block">Tambah Data</span>
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </div>
+                        <input id="production_plan_id" type="production_plan_id" name="production_plan_id"
+                            value="{{ $generate_code_work }}" class="form-control"
+placeholder="Masukkan Production Plan Code" disabled readonly>
+@error('production_plan_id')
+<div class="text-danger mt-1">{{ $message }}</div>
+@enderror
 </div>
+
+<div class="mb-3">
+    <label for="operator" class="form-label fw-semibold"> Nama Operator </label>
+    <select class="js-example-basic-single" name="state">
+        <option value="AL">Alabama</option>
+        ...
+        <option value="WY">Wyoming</option>
+    </select>
+
+    @error('operator')
+    <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="email_branch_company" class="form-label fw-semibold">Email Cabang Perusahaan</label>
+    <input id="email_branch_company" type="email" name="email_branch_company" class="form-control"
+        placeholder="Masukkan email cabang" required>
+
+    @error('email_branch_company')
+    <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="logo" class="form-label fw-semibold">Logo Cabang Perusahaan</label>
+    <input id="logo" type="file" name="logo" class="form-control" accept="image/*">
+    <small class="text-muted">Format: JPG, PNG, maksimal 2MB</small>
+    @error('logo')
+    <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+
+<div class="mb-3">
+    <label for="status" class="form-label fw-semibold">Status Cabang</label>
+    <select id="status" name="status" class="form-select" required>
+        <option value="" disabled selected>Pilih Status</option>
+        <option value="Active">Active</option>
+        <option value="Non Active">Non Active</option>
+    </select>
+    @error('status')
+    <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+
+<div class="mb-3">
+    <label for="phone_number" class="form-label fw-semibold">No Telepon Cabang Perusahaan</label>
+    <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">+62</span>
+        <input id="phone_number" type="text" name="phone_number" class="form-control"
+            placeholder="Masukkan No telp Cabang Perusahaan" required>
+    </div>
+    @error('phone_number')
+    <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+
+</div>
+<div class="modal-footer d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+        <i class="bx bx-x d-block d-sm-none"></i>
+        <span class="d-none d-sm-block">Tutup</span>
+    </button>
+
+    <button type="submit" class="btn btn-primary ms-1">
+
+        <span class="d-none d-sm-block">Tambah Data</span>
+    </button>
+</div>
+</form>
+
+</div>
+</div>
+</div> --}}
 @endsection
 
 @push('styles')
+{{-- Library Kebutuhan Datatables CSS --}}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 @endpush
 
 @push('scripts')
 <script>
-$(document).ready(function() {
-    $('#myTable7').DataTable();
-});
+    $(document).ready(function () {
+        $('#myTable8').DataTable();
+    });
+    // In your Javascript (external .js resource or <script> tag)
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2();
+    });
+
 </script>
 @endpush

@@ -6,7 +6,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start">
+                <div
+                    class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start">
 
                     <!-- Judul dan Tombol Tambah Data -->
                     <div class="d-flex align-items-center mb-3 mb-md-0">
@@ -20,21 +21,16 @@
                     <!-- Input Search (ditempatkan di kanan) -->
                     <form action="" method="GET" class="d-flex" role="search">
                         <div class="input-group">
-                            <input
-                                type="text"
-                                name="search"
-                                class="form-control"
-                                placeholder="Cari barang..."
-                                value=""
-                            >
+                            <input type="text" name="search" class="form-control" placeholder="Cari barang..." value="">
                             <button class="btn btn-outline-secondary" type="submit">
                                 <i class="bi bi-search"></i>
                             </button>
                             <!-- Tambahkan tombol reset jika ada nilai pencarian -->
                             {{-- @if(request('search'))
-                                <a href="{{ route('barang.index') }}" class="btn btn-outline-danger" title="Hapus Pencarian">
-                                    <i class="bi bi-x-lg"></i>
-                                </a>
+                                <a href="{{ route('barang.index') }}" class="btn btn-outline-danger" title="Hapus
+                            Pencarian">
+                            <i class="bi bi-x-lg"></i>
+                            </a>
                             @endif --}}
                         </div>
                     </form>
@@ -42,32 +38,36 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover" id="myTable6">
+                    <table class="table table-hover" id="myTable5">
                         <thead>
                             <tr>
-                                        <th>No</th>
-                                        <th>Kode BOM</th>
-                                        <th>Nama Kebutuhan Product</th>
-                                        <th>Revisi</th>
-                                        <th>Nama Items</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-
+                                <th>No</th>
+                                <th>Tanggal BOM</th>
+                                <th>Kode BOM</th>
+                                <th>Revisi Ke</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Contoh Data Statis -->
-                            <tr>
-                                <td>asdasdasd</td>
-                                <td>asdasdasd</td>
-                                <td>asdasdasd</td>
-                                <td>asdasdasd</td>
-                                <td>asdasdasd</td>
-                                <td>asdasdasd</td>
-                                <td>
 
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data_bom as $data)
+                            <tr>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$data->date_bom}}</td>
+                                <td>{{$data->code_bom}}</td>
+                                <td>{{$data->revision}}</td>
+                                <td>
+                                    @if ($data->status == 'Pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    @else
+                                    <span class="badge bg-secondary">{{ $data->status }}</span>
+                                    @endif
+                                </td>
+
+                                <td>
                                     <div class="d-flex gap-2">
                                         <!-- Tombol Edit -->
                                         <a href="" class="btn btn-sm btn-warning">
@@ -77,7 +77,7 @@
                                 </td>
                                 </td>
                             </tr>
-
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -94,10 +94,9 @@
 
 @push('scripts')
 <script>
-$(document).ready(function() {
-    $('#myTable6').DataTable();
-});
+    $(document).ready(function () {
+        $('#myTable5').DataTable();
+    });
 
 </script>
 @endpush
-
