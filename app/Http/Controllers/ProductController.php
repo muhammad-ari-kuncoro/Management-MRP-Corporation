@@ -12,9 +12,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
-        $data['product_items'] = Product::all();
+
         $data['judul'] = 'Product Page';
+        $data['title_header_dashboard'] = 'Product Page MRP System';
+        $data['product_items'] = Product::all();
         return view('product.index',$data);
     }
 

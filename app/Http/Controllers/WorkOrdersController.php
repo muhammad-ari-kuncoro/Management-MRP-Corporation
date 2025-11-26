@@ -17,6 +17,7 @@ class WorkOrdersController extends Controller
     {
         //
         $data['judul'] = 'Work Orders Page';
+        $data['title_header_dashboard']  = 'Work Orders Page MRP System';
         $data['data_WO'] = WorkOrders::all();
         return view('work-orders.index',$data);
     }

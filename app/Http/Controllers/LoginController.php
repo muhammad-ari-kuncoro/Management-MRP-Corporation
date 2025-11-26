@@ -13,8 +13,8 @@ class LoginController extends Controller
      */
     public function index()
     {
-        //
-        return view('auth.login');
+        $data['title_header'] = 'Login Page MRP System';
+        return view('auth.login',$data);
     }
 
     public function authenticate(Request $request)

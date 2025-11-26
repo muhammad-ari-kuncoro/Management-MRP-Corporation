@@ -18,6 +18,7 @@ class BillsOfMaterialsController extends Controller
     {
         //
         $data['judul'] = 'Bills Of Materials Page';
+        $data['title_header_dashboard'] = 'Bills Of Materials Page MRP System';
         $data['data_bom'] = BillsOfMaterial::all();
         return view('bills-of-materials.index',$data);
     }
