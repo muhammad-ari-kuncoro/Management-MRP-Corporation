@@ -29,6 +29,7 @@ class WorkOrdersController extends Controller
     {
         //
         $data['judul'] = 'Laporan Tambah Kerja Page';
+        $data['title_header_dashboard']  = 'Create Work Orders Page MRP System';
         $data['generate_code_work'] = $this->generateCode();
         $data['data_product'] = Product::all();
         $data['data_bom'] = BillsOfMaterial::all();
