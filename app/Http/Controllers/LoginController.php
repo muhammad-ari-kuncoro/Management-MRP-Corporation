@@ -19,34 +19,29 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-       // 1. Validasi Input
-       $validateData = $request->validate([
-        'email' => 'required|email|min:5|max:20', // Ditambahkan 'email' rule
-        'password' => 'required|min:5|max:20'
-     ]);
+        // 1. Validasi Input
+        $validateData = $request->validate([
+            'email' => 'required|email|min:5|max:20',
+            'password' => 'required|min:5|max:20',
+        ]);
 
-    // 2. Mencoba Autentikasi
+// 2. Mencoba Autentikasi
     if (Auth::attempt($validateData)) {
         $request->session()->regenerate();
-        // Mendapatkan data pengguna yang baru login
+
         $user = Auth::user();
-        // 3. Logika Pengalihan Berdasarkan Peran (Role)
         if ($user->user_role === 'superadmin') {
-            // Jika superadmin, arahkan ke halaman khusus superadmin (misalnya, 'superadmin/dashboard')
             return redirect()->intended('/dashboard');
-
         } elseif ($user->user_role === 'purchasing') {
-            // Jika admin biasa, arahkan ke dashboard admin standar
             return redirect()->intended('admin/dashboard');
-
         } else {
-            // Untuk peran 'user' atau peran lainnya, arahkan ke dashboard umum
             return redirect()->intended('dashboard');
         }
     }
 
-    // Jika autentikasi gagal
-    return back()->with('loginError', 'Login Failed. Cek kembali email dan password Anda.');
+    // --- TAMBAHKAN INI JIKA LOGIN GAGAL ---
+    // Mengembalikan user ke halaman login dengan pesan error
+    return back()->with('loginError', 'Login Gagal! Username atau password salah.');
     }
 
     /**

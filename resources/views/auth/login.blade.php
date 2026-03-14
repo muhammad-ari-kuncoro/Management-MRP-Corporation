@@ -3,6 +3,7 @@
 <div class="row justify-content-center mb-3">
     <!-- Kolom Login. col-lg-5 agar ukurannya proporsional dan diletakkan di tengah dengan justify-content-center -->
     <div class="col-lg-5 col-12">
+        @include('partials.flash_data')
         <div id="auth-left">
             <h1 class="auth-title text-center">Log in.</h1>
             <p class="auth-subtitle mb-5 text-center">Log in with your data that you entered during registration.</p>
@@ -26,13 +27,13 @@
                     </div>
                 </div>
 
-                <!-- Checkbox -->
+                {{-- <!-- Checkbox -->
                 <div class="form-check form-check-lg d-flex align-items-end mb-3">
                     <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label text-gray-600" for="flexCheckDefault">
                         Keep me logged in
                     </label>
-                </div>
+                </div> --}}
 
                 <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
             </form>
