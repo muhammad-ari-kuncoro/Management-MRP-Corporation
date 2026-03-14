@@ -27,6 +27,7 @@ class SupplierController extends Controller
     {
         //
         $data['judul'] = 'Form Master Tambah Data Barang';
+        $data['title_header_dashboard'] = 'Create Data Supplier Company MRP System';
         $data['branchCompany'] =  BranchCompany::all();
         return view('supplier.create',$data);
     }

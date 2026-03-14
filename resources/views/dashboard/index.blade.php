@@ -18,22 +18,22 @@
         </div>
         <div class="col-6 col-lg col-md-4">
             <div class="card">
-                <div class="card-body px-4 py-4-5">
+                <div class="card-body px-4 py-4-5 text-center">
                     <div class="stats-icon blue mb-2">
                         <i class="iconly-boldProfile"></i>
                     </div>
                     <h6 class="text-muted font-semibold mb-1">Total Suppliers</h6>
-                    <h5 class="font-extrabold mb-0">{{ $totalSuppliers ?? 0 }}</h5>
+                    <h5 class="font-extrabold mb-0">{{ $totalSupplier ?? 0 }}</h5>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg col-md-4">
             <div class="card">
-                <div class="card-body px-4 py-4-5">
+                <div class="card-body px-4 py-4-5 text-center">
                     <div class="stats-icon green mb-2">
                         <i class="iconly-boldDocument"></i>
                     </div>
-                    <h6 class="text-muted font-semibold mb-1">Purchase Orders</h6>
+                    <h6 class="text-muted font-semibold mb-1">Purchase Orders (PO)</h6>
                     <h5 class="font-extrabold mb-0">{{ $totalPO ?? 0 }}</h5>
                 </div>
             </div>
