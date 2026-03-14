@@ -16,6 +16,7 @@ class BranchCompanyController extends Controller
     {
         //
         $data['judul'] = 'Branch Company Page';
+        $data['title_header_dashboard'] = 'Branch Company Page MRP System';
         $data['data_branch'] = BranchCompany::withTrashed()->get();
         return view('branch-company.index',$data);
     }

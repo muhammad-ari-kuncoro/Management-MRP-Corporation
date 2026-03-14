@@ -16,9 +16,10 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-        //
+
+      $data['judul'] = 'Purchase Order MRP System';
+      $data['title_header_dashboard'] = 'Purchase Order MRP System';
       $data['data_purchase_orders']  = PurchaseOrder::where('po_no', '!=', 'drafts')->get();
-      $data['judul'] = 'Form Purchase Order';
         return view('purchase-order.index',$data);
     }
 

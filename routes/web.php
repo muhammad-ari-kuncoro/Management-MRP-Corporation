@@ -102,6 +102,8 @@ Route::prefix('product')->name('product.')->group(function(){
 
 Route::prefix('work-orders')->name('work-orders.')->group(function(){
     Route::get('/',[WorkOrdersController::class, 'index'])->name('index');
+    Route::get('/create',[WorkOrdersController::class, 'create'])->name('create');
+    Route::post('/store',[WorkOrdersController::class, 'store'])->name('store');
 });
 
 

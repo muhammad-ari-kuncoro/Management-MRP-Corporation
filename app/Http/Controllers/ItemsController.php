@@ -16,6 +16,7 @@ class ItemsController extends Controller
     {
         //
         $data['judul'] = 'Master Data Barang';
+        $data['title_header_dashboard'] = 'Items Raw Materials MRP System';
         $data['item_all'] = Items::all();
 
         return view('items.index',$data);

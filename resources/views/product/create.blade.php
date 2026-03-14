@@ -28,13 +28,14 @@
 
                         <div class="form-group mb-3">
                             <label>Spesifikasi Barang</label>
-                            <input type="text" name="spesification_product" id="spesification_product" class="form-control"
-                                placeholder="Masukkan Spesifikasi barang">
+                            <input type="text" name="spesification_product" id="spesification_product"
+                                class="form-control" placeholder="Masukkan Spesifikasi barang">
                         </div>
 
                         <div class="form-group mb-3">
                             <label>Tipe Barang</label>
-                            <input type="text" name="type" id="type" class="form-control" placeholder="Cth: Elektronik, Kimia, dll">
+                            <input type="text" name="type" id="type" class="form-control"
+                                placeholder="Cth: Elektronik, Kimia, dll">
                         </div>
 
                         <div class="form-group mb-3">
@@ -48,9 +49,17 @@
                             </select>
                         </div>
 
+                        {{-- Menggunakan onInput & onKeyDown untuk Mencegah Inoutan Character dan Simbol sejenisnya --}}
                         <div class="form-group mb-3">
-                            <label>Jumlah Barang (Qty)</label>
-                            <input type="number" name="qty_product" id="qty_product" class="form-control" placeholder="Cth: 100">
+                            <label class="form-label fw-semibold">Jumlah Product(Qty)</label>
+                            <input type="number" name="qty_product" id="qty_product" class="form-control"
+                                placeholder="Masukkan jumlah Quantity Produk" min="0"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                onkeydown="return event.keyCode !== 189 && event.keyCode !== 187 && event.keyCode !== 107 && event.keyCode !== 109;">
+                            <small class="text-muted">Hanya angka (0 - 9), tidak bisa input huruf atau simbol</small>
+                            @error('qty_product')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="form-group mb-3">
@@ -118,43 +127,45 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    let daftarBarang = [];
+    document.addEventListener('DOMContentLoaded', function () {
+        let daftarBarang = [];
 
-    const addBtn = document.getElementById('addToTable');
-    const submitBtn = document.getElementById('submitAll');
-    const barangForm = document.getElementById('barangForm');
+        const addBtn = document.getElementById('addToTable');
+        const submitBtn = document.getElementById('submitAll');
+        const barangForm = document.getElementById('barangForm');
 
-    addBtn.addEventListener('click', function () {
-        const barang = {
-            product_code: document.getElementById('product_code').value.trim(),
-            product_name: document.getElementById('product_name').value.trim(),
-            spesification_product: document.getElementById('spesification_product').value.trim(),
-            type: document.getElementById('type').value.trim(),
-            unit: document.getElementById('unit').value,
-            qty_product: document.getElementById('qty_product').value,
-            type_qty: document.getElementById('type_qty').value,
-            status: document.getElementById('status').value,
-            description_product: document.getElementById('description_product').value.trim(),
-        };
+        addBtn.addEventListener('click', function () {
+            const barang = {
+                product_code: document.getElementById('product_code').value.trim(),
+                product_name: document.getElementById('product_name').value.trim(),
+                spesification_product: document.getElementById('spesification_product').value
+                .trim(),
+                type: document.getElementById('type').value.trim(),
+                unit: document.getElementById('unit').value,
+                qty_product: document.getElementById('qty_product').value,
+                type_qty: document.getElementById('type_qty').value,
+                status: document.getElementById('status').value,
+                description_product: document.getElementById('description_product').value.trim(),
+            };
 
-        if (!barang.product_code || !barang.product_name || !barang.spesification_product ||
-            !barang.type || !barang.unit || !barang.qty_product || !barang.type_qty || !barang.status) {
-            alert('Semua field wajib diisi!');
-            return;
-        }
+            if (!barang.product_code || !barang.product_name || !barang.spesification_product ||
+                !barang.type || !barang.unit || !barang.qty_product || !barang.type_qty || !barang
+                .status) {
+                alert('Semua field wajib diisi!');
+                return;
+            }
 
-        daftarBarang.push(barang);
-        renderTable();
-        barangForm.reset();
-    });
+            daftarBarang.push(barang);
+            renderTable();
+            barangForm.reset();
+        });
 
-    function renderTable() {
-        const tbody = document.querySelector('#barangTable tbody');
-        tbody.innerHTML = '';
+        function renderTable() {
+            const tbody = document.querySelector('#barangTable tbody');
+            tbody.innerHTML = '';
 
-        daftarBarang.forEach((b, i) => {
-            const row = `
+            daftarBarang.forEach((b, i) => {
+                const row = `
                 <tr>
                     <td>${b.product_code}</td>
                     <td>${b.product_name}</td>
@@ -168,44 +179,47 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td><button class="btn btn-danger btn-sm" onclick="hapusBarang(${i})">Hapus</button></td>
                 </tr>
             `;
-            tbody.insertAdjacentHTML('beforeend', row);
-        });
-    }
-
-    window.hapusBarang = function(index) {
-        daftarBarang.splice(index, 1);
-        renderTable();
-    };
-
-    submitBtn.addEventListener('click', async function () {
-        if (daftarBarang.length === 0) {
-            alert('Tabel masih kosong!');
-            return;
-        }
-
-        const csrfToken = document.querySelector('input[name="_token"]').value;
-
-        try {
-            const res = await fetch("{{ route('product.store') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken,
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({ data: daftarBarang })
+                tbody.insertAdjacentHTML('beforeend', row);
             });
-
-            const data = await res.json();
-            alert(data.message || 'Data berhasil disimpan!');
-            daftarBarang = [];
-            renderTable();
-        } catch (err) {
-            console.error(err);
-            alert('Terjadi kesalahan saat menyimpan data.');
         }
+
+        window.hapusBarang = function (index) {
+            daftarBarang.splice(index, 1);
+            renderTable();
+        };
+
+        submitBtn.addEventListener('click', async function () {
+            if (daftarBarang.length === 0) {
+                alert('Tabel masih kosong!');
+                return;
+            }
+
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+
+            try {
+                const res = await fetch("{{ route('product.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        data: daftarBarang
+                    })
+                });
+
+                const data = await res.json();
+                alert(data.message || 'Data berhasil disimpan!');
+                daftarBarang = [];
+                renderTable();
+            } catch (err) {
+                console.error(err);
+                alert('Terjadi kesalahan saat menyimpan data.');
+            }
+        });
     });
-});
+
 </script>
 
 @endsection

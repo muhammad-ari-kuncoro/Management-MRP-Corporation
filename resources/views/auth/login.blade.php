@@ -5,8 +5,8 @@
     <div class="col-lg-5 col-12">
         @include('partials.flash_data')
         <div id="auth-left">
-            <h1 class="auth-title text-center">Log in.</h1>
-            <p class="auth-subtitle mb-5 text-center">Log in with your data that you entered during registration.</p>
+            <h1 class="auth-title text-center">MRP System</h1>
+            <p class="auth-subtitle mb-5 text-center">Log in with your data Sytem MRP that you entered.</p>
 
             <!-- Form login -->
             <form action="{{ route('login') }}" method="POST">
@@ -39,14 +39,14 @@
             </form>
 
             <!-- Link Bawah -->
-            <div class="text-center mt-5 text-lg fs-4">
-                <p class="text-gray-600">Don't have an account?
+            {{-- <div class="text-center mt-5 text-lg fs-4"> --}}
+                {{-- <p class="text-gray-600">Don't have an account?
                     <a href="auth-register.html" class="font-bold">Sign up</a>.
-                </p>
+                </p> --}}
                 {{-- <p>
                     <a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.
                 </p> --}}
-            </div>
+            {{-- </div> --}}
         </div>
     </div>
     <!-- Bagian col-lg-7 yang tadinya ada di kanan (jika tidak diperlukan lagi untuk tampilan centered) telah dihapus -->

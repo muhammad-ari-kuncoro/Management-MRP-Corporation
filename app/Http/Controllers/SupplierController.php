@@ -15,6 +15,7 @@ class SupplierController extends Controller
     {
         //
         $data['judul'] = 'Master Data Supplier';
+        $data['title_header_dashboard'] = 'Supplier Company Page MRP System';
         $data['data_supplier']  = Supplier::all();
         return view('supplier.index',$data);
     }
