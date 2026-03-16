@@ -18,16 +18,27 @@
                                 class="bi bi-plus-circle-fill"></i>
                             Tambah Data Supplier</a>
                     </div>
-
-                    <!-- Input Search (ditempatkan di kanan) -->
-                    <form action="" method="GET" class="d-flex" role="search">
-                        <div class="input-group">
-                            <button class="btn btn-outline-success" type="button" onclick="window.print()">
-                                <i class="bi bi-printer"></i> Print Data Excel
+                       <form action="{{ route('supplier-company.supplier.export-excel') }}" method="GET"
+                            class="d-inline-flex gap-2 align-items-end">
+                            <div>
+                                <label class="form-label mb-1" style="font-size:12px;">Bulan</label>
+                                <select name="bulan" class="form-select form-select-sm">
+                                    @foreach (range(1, 12) as $m)
+                                        <option value="{{ $m }}" {{ date('n') == $m ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label mb-1" style="font-size:12px;">Tahun</label>
+                                <input type="number" name="tahun" class="form-control form-control-sm"
+                                    value="{{ date('Y') }}" min="2020" max="2099" style="width:90px;">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
                             </button>
-                        </div>
-
-                    </form>
+                        </form>
 
                 </div>
 

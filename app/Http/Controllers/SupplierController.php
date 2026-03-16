@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BranchCompanyExport;
+use App\Exports\SupplierExport;
 use App\Models\BranchCompany;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SupplierController extends Controller
 {
@@ -143,6 +148,7 @@ class SupplierController extends Controller
     {
         //
         $data['judul'] = 'Halaman Edit Supplier';
+        $data['title_header_dashboard'] = 'Edit Data Supplier Company MRP System';
         $data['dataSupplierById'] = Supplier::findOrFail($id);
         $data['branchCompany'] = BranchCompany::all();
         return view('supplier.edit',$data);
@@ -184,33 +190,39 @@ class SupplierController extends Controller
             'siup'                => 'required|string|max:30',
             'scan_siup'           => 'nullable|file|max:2048',
             'scan_npwp'           => 'nullable|file|max:2048',
-        ]);
+            ]);
 
+            try {
         // 3. HANDLE FILE UPLOAD (jika ada file baru)
         $scanNPWPPath = $supplier->scan_npwp;
         $scanSIUPPath = $supplier->scan_siup;
 
         if ($request->hasFile('scan_npwp')) {
-            // Hapus file lama (opsional)
-            if ($supplier->scan_npwp && file_exists(public_path($supplier->scan_npwp))) {
-                unlink(public_path($supplier->scan_npwp));
-            }
+    // Hapus file lama kalau ada
+    if ($supplier->scan_npwp) {
+        Storage::disk('public')->delete(
+            str_replace('storage/', '', $supplier->scan_npwp)
+        );
+    }
 
-            $path = $request->file('scan_npwp')->store('scans/npwp', 'public');
-            $scanNPWPPath = str_replace('public/', 'storage/', $path);
-        }
+    $path = $request->file('scan_npwp')->store('scans/npwp', 'public');
+    // path yang disimpan ke DB: 'storage/scans/npwp/xxx.png'
+    $scanNPWPPath = 'storage/' . $path;
+}
 
-        if ($request->hasFile('scan_siup')) {
-            if ($supplier->scan_siup && file_exists(public_path($supplier->scan_siup))) {
-                unlink(public_path($supplier->scan_siup));
-            }
+if ($request->hasFile('scan_siup')) {
+    if ($supplier->scan_siup) {
+        Storage::disk('public')->delete(
+            str_replace('storage/', '', $supplier->scan_siup)
+        );
+    }
 
-            $path = $request->file('scan_siup')->store('scans/siup', 'public');
-            $scanSIUPPath = str_replace('public/', 'storage/', $path);
-        }
+    $path = $request->file('scan_siup')->store('scans/siup', 'public');
+    $scanSIUPPath = 'storage/' . $path;
+}
+
 
         // 4. UPDATE DATA SUPPLIER
-        try {
             $supplier->update([
                 'name_suppliers'      => $validatedData['name_suppliers'],
                 'nickname_suppliers'  => $validatedData['nickname_suppliers'],
@@ -275,5 +287,14 @@ class SupplierController extends Controller
             return redirect()->route('supplier-company.index')
                 ->with('error', 'Gagal menghapus data Supplier. Mohon coba lagi.');
         }
+    }
+    public function exportExcel (Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+        $namaBulan = Carbon::create()->month($bulan)->format('F');
+        $filename = "Supplier-Company-{$namaBulan}-{$tahun}.xlsx";
+
+        return Excel::download(new SupplierExport($bulan, $tahun), $filename);
     }
 }
