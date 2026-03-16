@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BranchCompanyExport;
 use App\Models\BranchCompany;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Faker\Core\File;
 use Illuminate\Http\Request;
 use Spatie\FlareClient\View;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+
 class BranchCompanyController extends Controller
 {
     /**
@@ -18,16 +22,13 @@ class BranchCompanyController extends Controller
         $data['judul'] = 'Branch Company Page';
         $data['title_header_dashboard'] = 'Branch Company Page MRP System';
         $data['data_branch'] = BranchCompany::withTrashed()->get();
-        return view('branch-company.index',$data);
+        return view('branch-company.index', $data);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -37,37 +38,35 @@ class BranchCompanyController extends Controller
         //
         //
         $request->validate([
-                'name_branch_company'       => 'required|max:255|min:5',
-                'address_branch_company'    => 'required|max:255|min:5',
-                'email_branch_company'      => 'required|max:255|min:5',
-                'logo'                      => 'required|max:255|min:3',
-                'status'                    => 'required|max:20|min:5',
-                'phone_number'              => 'required|min:10|max:13'
-
+            'name_branch_company' => 'required|max:255|min:5',
+            'address_branch_company' => 'required|max:255|min:5',
+            'email_branch_company' => 'required|max:255|min:5',
+            'logo' => 'required|max:255|min:3',
+            'status' => 'required|max:20|min:5',
+            'phone_number' => 'required|min:10|max:13',
         ]);
 
         $logoPath = null;
-    if ($request->hasFile('logo')) {
-        // Simpan otomatis ke storage/app/public/logos
-        $path = $request->file('logo')->store('public/logos');
+        if ($request->hasFile('logo')) {
+            // Simpan otomatis ke storage/app/public/logos
+            $path = $request->file('logo')->store('public/logos');
 
-        // Buat path yang bisa ditampilkan lewat public/storage
-        $logoPath = str_replace('public/', 'storage/', $path);
-    }
+            // Buat path yang bisa ditampilkan lewat public/storage
+            $logoPath = str_replace('public/', 'storage/', $path);
+        }
 
-    // 3. Simpan Data ke Database
-    BranchCompany::create([
-        'name_branch_company'    => $request->name_branch_company,
-        'address_branch_company' => $request->address_branch_company,
-        'email_branch_company'   => $request->email_branch_company,
-        'logo'                   => $logoPath,
-        'status'                 => $request->status,
-        'phone_number'           => $request->phone_number,
-        // Tambahkan kolom lain jika ada
-    ]);
-    // 4. Redirect dengan Pesan Sukses
-    return redirect()->route('branch-company.index')->with('success', 'Data cabang perusahaan berhasil ditambahkan.');
-
+        // 3. Simpan Data ke Database
+        BranchCompany::create([
+            'name_branch_company' => $request->name_branch_company,
+            'address_branch_company' => $request->address_branch_company,
+            'email_branch_company' => $request->email_branch_company,
+            'logo' => $logoPath,
+            'status' => $request->status,
+            'phone_number' => $request->phone_number,
+            // Tambahkan kolom lain jika ada
+        ]);
+        // 4. Redirect dengan Pesan Sukses
+        return redirect()->route('branch-company.index')->with('success', 'Data cabang perusahaan berhasil ditambahkan.');
     }
 
     /**
@@ -81,95 +80,123 @@ class BranchCompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-   public function edit($id)
-{
-    $data['judul'] = 'Judul Edit Halaman';
-    $data['branchCompanyById'] = BranchCompany::findOrFail($id);
+    public function edit($id)
+    {
+        $data['judul'] = 'Judul Edit Halaman';
+        $data['branchCompanyById'] = BranchCompany::findOrFail($id);
 
-    return view('branch-company.edit', $data);
-}
-
+        return view('branch-company.edit', $data);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, $id)
-{
-    // 1️⃣ Validasi input
-    $request->validate([
-        'name_branch_company'    => 'required|max:255|min:5',
-        'address_branch_company' => 'required|max:255|min:5',
-        'email_branch_company'   => 'required|max:255|min:5',
-        'status'                 => 'required|max:20|min:5',
-        'phone_number'           => 'required|min:11|max:13',
-        'logo'                   => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // logo boleh kosong saat update
-    ]);
+    public function update(Request $request, $id)
+    {
+        // 1️⃣ Validasi input
+        $request->validate([
+            'name_branch_company' => 'required|max:255|min:5',
+            'address_branch_company' => 'required|max:255|min:5',
+            'email_branch_company' => 'required|max:255|min:5',
+            'status' => 'required|max:20|min:5',
+            'phone_number' => 'required|min:11|max:13',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // logo boleh kosong saat update
+        ]);
 
-    // 2️⃣ Ambil data lama dari database
-    $branchCompany = BranchCompany::findOrFail($id);
+        // 2️⃣ Ambil data lama dari database
+        $branchCompany = BranchCompany::findOrFail($id);
 
-    // 3️⃣ Siapkan path logo lama
-    $logoPath = $branchCompany->logo;
+        // 3️⃣ Siapkan path logo lama
+        $logoPath = $branchCompany->logo;
 
-    // 4️⃣ Jika user upload logo baru
-    if ($request->hasFile('logo')) {
-        // Hapus logo lama (jika ada)
-        if ($logoPath && file_exists(public_path($logoPath))) {
-            unlink(public_path($logoPath));
+        // 4️⃣ Jika user upload logo baru
+        if ($request->hasFile('logo')) {
+            // Hapus logo lama (jika ada)
+            if ($logoPath && file_exists(public_path($logoPath))) {
+                unlink(public_path($logoPath));
+            }
+
+            // Simpan logo baru
+            $path = $request->file('logo')->store('public/logos');
+            $logoPath = str_replace('public/', 'storage/', $path);
         }
 
-        // Simpan logo baru
-        $path = $request->file('logo')->store('public/logos');
-        $logoPath = str_replace('public/', 'storage/', $path);
+        // 5️⃣ Update data di database
+        $branchCompany->update([
+            'name_branch_company' => $request->name_branch_company,
+            'address_branch_company' => $request->address_branch_company,
+            'email_branch_company' => $request->email_branch_company,
+            'logo' => $logoPath,
+            'status' => $request->status,
+            'phone_number' => $request->phone_number,
+        ]);
+
+        // 6️⃣ Redirect dengan pesan sukses
+        return redirect()->route('branch-company.index')->with('success', 'Data cabang perusahaan berhasil diperbarui.');
     }
-
-    // 5️⃣ Update data di database
-    $branchCompany->update([
-        'name_branch_company'    => $request->name_branch_company,
-        'address_branch_company' => $request->address_branch_company,
-        'email_branch_company'   => $request->email_branch_company,
-        'logo'                   => $logoPath,
-        'status'                 => $request->status,
-        'phone_number'           => $request->phone_number,
-    ]);
-
-    // 6️⃣ Redirect dengan pesan sukses
-    return redirect()->route('branch-company.index')
-                     ->with('success', 'Data cabang perusahaan berhasil diperbarui.');
-}
-        public function destroyData($id)
-        {
-            $branch = BranchCompany::findOrFail($id);
-            $branch->delete(); // ini akan mengisi kolom deleted_at
-            return redirect()->route('branch-company.index')
-        ->with('success', 'Data cabang berhasil dihapus (soft delete).');
-        }
+    public function destroyData($id)
+    {
+        $branch = BranchCompany::findOrFail($id);
+        $branch->delete(); // ini akan mengisi kolom deleted_at
+        return redirect()->route('branch-company.index')->with('success', 'Data cabang berhasil dihapus (soft delete).');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(BranchCompany $branchCompany)
     {
-   // Hapus file logo kalau ada
-    if ($branchCompany->logo) {
-        // Coba hapus dari storage/public
-        $storagePath = str_replace('storage/', '', $branchCompany->logo);
+        // Hapus file logo kalau ada
+        if ($branchCompany->logo) {
+            // Coba hapus dari storage/public
+            $storagePath = str_replace('storage/', '', $branchCompany->logo);
 
-        if (Storage::disk('public')->exists($storagePath)) {
-            Storage::disk('public')->delete($storagePath);
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);
+            }
+
+            // Coba hapus dari public folder langsung (jika file disimpan langsung di public/)
+            $publicPath = public_path($branchCompany->logo);
+            if (file_exists($publicPath)) {
+                unlink($publicPath);
+            }
         }
 
-        // Coba hapus dari public folder langsung (jika file disimpan langsung di public/)
-        $publicPath = public_path($branchCompany->logo);
-        if (file_exists($publicPath)) {
-            unlink($publicPath);
-        }
+        // Soft delete data dari database
+        $branchCompany->delete(); // ini nggak benar-benar hapus karena pakai SoftDeletes
+
+        return redirect()->route('branch-company.index')->with('success', 'Data cabang berhasil dihapus (soft delete).');
     }
 
-    // Soft delete data dari database
-    $branchCompany->delete(); // ini nggak benar-benar hapus karena pakai SoftDeletes
+    public function pdfBranchCompany($id)
+    {
+        $branch = BranchCompany::findOrFail($id);
+        // Logo base64
+        $logoBase64 = null;
+        if ($branch->logo && file_exists(public_path($branch->logo))) {
+            $type = pathinfo($branch->logo, PATHINFO_EXTENSION);
+            $imageData = file_get_contents(public_path($branch->logo));
+            $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($imageData);
+        }
 
-    return redirect()->route('branch-company.index')
-        ->with('success', 'Data cabang berhasil dihapus (soft delete).');
+        $data = [
+            'branch' => $branch,
+            'logoBase64' => $logoBase64,
+            'docTitle' => 'Profil Cabang Perusahaan',
+            'docSubtitle' => 'Dokumen Resmi Cabang',
+            'docNumber' => 'BC-' . str_pad($branch->id, 4, '0', STR_PAD_LEFT),
+        ];
+        $pdf = Pdf::loadView('branch-company.pdf_data', $data)->setPaper('a4', 'portrait');
+        return $pdf->download('branch-' . $branch->id . '.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+        $namaBulan = \Carbon\Carbon::create()->month($bulan)->format('F');
+        $filename = "Branch-Company-{$namaBulan}-{$tahun}.xlsx";
+
+        return Excel::download(new BranchCompanyExport($bulan, $tahun), $filename);
     }
 }

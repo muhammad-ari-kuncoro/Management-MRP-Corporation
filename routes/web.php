@@ -35,7 +35,6 @@ Route::get('/dashboard',[DashboardController::class,'index'])->middleware(['auth
 
 
 Route::prefix('items')->name('items.')->middleware(['auth'])->group(function(){
-
     Route::get('/',[ItemsController::class, 'index'])->name('index');
     Route::get('/create',[ItemsController::class, 'create'])->name('create');
     Route::post('/create',[ItemsController::class, 'store'])->name('store');
@@ -66,13 +65,18 @@ Route::prefix('purchase-order-detail')->middleware(['auth'])->middleware(['auth'
     Route::post('/update-discount', [PurchaseOrderDetailController::class, 'updateDiscount'])->name('purchase-order-detail.updateDiscount');
 });
 
-
+// ROUTE FOR BRANCH COMPANY
 Route::prefix('branch-company')->name('branch-company.')->middleware(['auth'])->group(function(){
     Route::get('/',[BranchCompanyController::class, 'index'])->name('index');
     Route::post('/create',[BranchCompanyController::class, 'store'])->name('store');
     Route::get('/branch-company/edit/{id}',[BranchCompanyController::class, 'edit'])->name('edit');
     Route::put('/update-branch/{id}',[BranchCompanyController::class, 'update'])->name('update');
     Route::delete('/destroy/{id}',[BranchCompanyController::class, 'destroyData'])->name('destroy');
+    Route::get('branch-company/export-excel', [BranchCompanyController::class, 'exportExcel'])->name('branch-company.export-excel');
+
+    // DINONAKTIFKAN DULU SEMENTARA SAMPAI UNTUK DI BUTUHKAN
+    // Route::get('/branch-company/{id}/export-pdf', [BranchCompanyController::class, 'pdfBranchCompany'])->name('branch-company.export-pdf');
+
 });
 
 
