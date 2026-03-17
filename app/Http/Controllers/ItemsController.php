@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ItemExport;
+use App\Exports\SupplierExport;
 use App\Models\BranchCompany;
 use App\Models\Items;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemsController extends Controller
 {
@@ -19,7 +23,7 @@ class ItemsController extends Controller
         $data['title_header_dashboard'] = 'Items Raw Materials MRP System';
         $data['item_all'] = Items::all();
 
-        return view('items.index',$data);
+        return view('items.index', $data);
     }
 
     /**
@@ -28,9 +32,10 @@ class ItemsController extends Controller
     public function create()
     {
         //
-        $data['judul']  = 'Form Master Tambah Data Barang';
+        $data['judul'] = 'Form Master Tambah Data Barang';
+        $data['title_header_dashboard'] = 'Create Items Raw Materials MRP System';
         $data['branch_company'] = BranchCompany::all();
-        return view('items.create',$data);
+        return view('items.create', $data);
     }
 
     /**
@@ -48,9 +53,12 @@ class ItemsController extends Controller
         foreach ($data as $idx => $item) {
             // optional: basic validation per item (bisa ditingkatkan)
             if (empty($item['kode']) || empty($item['nama'])) {
-                return response()->json([
-                    'message' => "Item index {$idx} memiliki field kosong."
-                ], 422);
+                return response()->json(
+                    [
+                        'message' => "Item index {$idx} memiliki field kosong.",
+                    ],
+                    422,
+                );
             }
 
             $created[] = Items::create([
@@ -90,10 +98,9 @@ class ItemsController extends Controller
         //
         $data['judul'] = 'Judul Edit Halaman';
         $data['itemsDataById'] = Items::findOrFail($id);
-        $data['dataBranch'] =  BranchCompany::all(); // ambil semua cabang
+        $data['dataBranch'] = BranchCompany::all(); // ambil semua cabang
 
-    return view('items.edit', $data);
-
+        return view('items.edit', $data);
     }
 
     /**
@@ -101,47 +108,59 @@ class ItemsController extends Controller
      */
     public function update(Request $request, $id)
     {
-    // Cari data berdasarkan ID
-    $item = Items::find($id);
-    if (!$item) {
-        return response()->json(['message' => 'Data item tidak ditemukan!'], 404);
-    }
+        // Cari data berdasarkan ID
+        $item = Items::find($id);
+        if (!$item) {
+            return response()->json(['message' => 'Data item tidak ditemukan!'], 404);
+        }
 
-    // Validasi input
-    $validator = Validator::make($request->all(), [
-        'kd_item'                  => 'required|string|max:50',
-        'name_item'                => 'required|string|max:255',
-        'spesification'            => 'nullable|string|max:255',
-        'type'                     => 'nullable|string|max:100',
-        'price_item'               => 'required|numeric|min:0',
-        'qty'                      => 'required|integer|min:1',
-        'weight_item'              => 'nullable|numeric|min:0',
-        'hpp'                      => 'nullable|numeric|min:0',
-        'category'                 => 'required|string|max:100',
-        'status_item'              => 'required|in:Active,Non Active',
-        'branch_company_id'        => 'required|exists:tb_branch_company_items,id',
-        'minim_stok'               => 'nullable|integer|min:0',
-        'konversion_items_carbon'  => 'nullable|numeric|min:0',
-        'description'              => 'nullable|string|max:500',
-    ]);
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'kd_item' => 'required|string|max:50',
+            'name_item' => 'required|string|max:255',
+            'spesification' => 'nullable|string|max:255',
+            'type' => 'nullable|string|max:100',
+            'price_item' => 'required|numeric|min:0',
+            'qty' => 'required|integer|min:1',
+            'weight_item' => 'nullable|numeric|min:0',
+            'hpp' => 'nullable|numeric|min:0',
+            'category' => 'required|string|max:100',
+            'status_item' => 'required|in:Active,Non Active',
+            'branch_company_id' => 'required|exists:tb_branch_company_items,id',
+            'minim_stok' => 'nullable|integer|min:0',
+            'konversion_items_carbon' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string|max:500',
+        ]);
 
-    if ($validator->fails()) {
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validasi gagal!',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
+        }
+
+        // Update data
+        $item->update($validator->validated());
+
         return response()->json([
-            'message' => 'Validasi gagal!',
-            'errors' => $validator->errors()
-        ], 422);
+            'message' => 'Data item berhasil diperbarui!',
+            'data' => $item,
+        ]);
+
+        return view('items.index', $data);
     }
+    public function exportExcel (Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+        $namabulan = Carbon::create()->month($bulan)->format('F');
+        $filename = "Item-Barang-Company-{$namabulan}-{$tahun}.xlsx";
 
-    // Update data
-    $item->update($validator->validated());
-
-    return response()->json([
-        'message' => 'Data item berhasil diperbarui!',
-        'data' => $item
-    ]);
-
-     return view('items.index',$data);
-}
+        return Excel::download(new ItemExport($bulan, $tahun), $filename);
+    }
 
     /**
      * Remove the specified resource from storage.

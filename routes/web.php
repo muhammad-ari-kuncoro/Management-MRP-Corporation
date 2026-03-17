@@ -40,6 +40,7 @@ Route::prefix('items')->name('items.')->middleware(['auth'])->group(function(){
     Route::post('/create',[ItemsController::class, 'store'])->name('store');
     Route::get('/items/edit/{id}',[ItemsController::class, 'edit'])->name('edit');
     Route::put('/update-items/edit/{id}',[ItemsController::class, 'update'])->name('update');
+    Route::get('/items/export-excel', [ItemsController::class, 'exportExcel'])->name('item.export-excel');
 });
 
 // Purchase Order Routes
